@@ -5,6 +5,7 @@
 package service;
 
 import exception.NotEnoughException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Category;
 import repository.IRepository.ICategoryRepository;
@@ -31,7 +32,7 @@ public class CategoryServiceImpl implements ICategoryService{
     public List<Category> getAllCategoryRecords() {
         List<Category> categorys = categoryRepository.findAllCategory();
         if(categorys.isEmpty()){
-            throw new NotEnoughException("Category must be at lease 1");
+            return new ArrayList<>();
         }
         return categorys;
     }

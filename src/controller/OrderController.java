@@ -34,7 +34,9 @@ import service.ProductServiceImpl;
 import view.Home;
 import view.PlaceOrder;
 import common.OpenPdf;
+import exception.NotFoundException;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author PC
@@ -72,44 +74,44 @@ public class OrderController {
     public List<Product> getProductsByCategory(String category) {
         return productService.getAllRecordsByCategory(category);
     }
-    
-    public void createPdf(String customerName, Integer billId, String grandTotal){
+
+    public void createPdf(String customerName, Integer billId, String grandTotal) {
         String path = "D:\\";
-            com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
-            try {
-                PdfWriter.getInstance(doc, new FileOutputStream(path + "" + billId + ".pdf"));
-                doc.open();
-                Paragraph cafeName = new Paragraph("                                                       HIT COFFEE");
-                doc.add(cafeName);
-                Paragraph starLine = new Paragraph("----------------------------------------------------------------------------------------------------------------------------------");
-                doc.add(starLine);
-                Paragraph para3 = new Paragraph("Bill ID: " + billId + "\nCustomer Name: " + customerName + "\nTotal Paid: " + grandTotal);
-                doc.add(para3);
-                doc.add(starLine);
-                PdfPTable tb1 = new PdfPTable(4);
-                tb1.addCell("Name");
-                tb1.addCell("Price");
-                tb1.addCell("Quantity");
-                tb1.addCell("Total");
-                for (int i = 0; i < orderView.getjTable2().getRowCount(); i++) {
-                    String n = orderView.getjTable2().getValueAt(i, 0).toString();
-                    String d = orderView.getjTable2().getValueAt(i, 1).toString();
-                    String r = orderView.getjTable2().getValueAt(i, 2).toString();
-                    String q = orderView.getjTable2().getValueAt(i, 3).toString();
-                    tb1.addCell(n);
-                    tb1.addCell(d);
-                    tb1.addCell(r);
-                    tb1.addCell(q);
-                }
-                doc.add(tb1);
-                doc.add(starLine);
-                Paragraph thanksMess = new Paragraph("Thank yor very much! Please visit again.");
-                doc.add(thanksMess);
-                OpenPdf.openById(String.valueOf(billId));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+        com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
+        try {
+            PdfWriter.getInstance(doc, new FileOutputStream(path + "" + billId + ".pdf"));
+            doc.open();
+            Paragraph cafeName = new Paragraph("                                                       HIT COFFEE");
+            doc.add(cafeName);
+            Paragraph starLine = new Paragraph("----------------------------------------------------------------------------------------------------------------------------------");
+            doc.add(starLine);
+            Paragraph para3 = new Paragraph("Bill ID: " + billId + "\nCustomer Name: " + customerName + "\nTotal Paid: " + grandTotal);
+            doc.add(para3);
+            doc.add(starLine);
+            PdfPTable tb1 = new PdfPTable(4);
+            tb1.addCell("Name");
+            tb1.addCell("Price");
+            tb1.addCell("Quantity");
+            tb1.addCell("Total");
+            for (int i = 0; i < orderView.getjTable2().getRowCount(); i++) {
+                String n = orderView.getjTable2().getValueAt(i, 0).toString();
+                String d = orderView.getjTable2().getValueAt(i, 1).toString();
+                String r = orderView.getjTable2().getValueAt(i, 2).toString();
+                String q = orderView.getjTable2().getValueAt(i, 3).toString();
+                tb1.addCell(n);
+                tb1.addCell(d);
+                tb1.addCell(r);
+                tb1.addCell(q);
             }
-            doc.close();
+            doc.add(tb1);
+            doc.add(starLine);
+            Paragraph thanksMess = new Paragraph("Thank yor very much! Please visit again.");
+            doc.add(thanksMess);
+            OpenPdf.openById(String.valueOf(billId));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        doc.close();
     }
 
     private class GenaratedBillListener implements ActionListener {
@@ -164,14 +166,20 @@ public class OrderController {
             int index = orderView.getTable1SelectedRow();
             TableModel model = jTable.getModel();
             String productName = model.getValueAt(index, 0).toString();
-            Product product = productService.getProductByName(productName);
-            orderView.getTxtProName().setText(product.getName());
-            orderView.getTxtProPrice().setText(product.getPrice());
-            orderView.getjSpinner1().setValue(1);
-            orderView.getTxtProTotal().setText(product.getPrice());
-            orderView.setProductPrice(Integer.parseInt(product.getPrice()));
-            orderView.setProductTotal(Integer.parseInt(product.getPrice()));
-            orderView.getBtnAddToCart().setEnabled(true);
+            try {
+                Product product = productService.getProductByName(productName);
+                orderView.getTxtProName().setText(product.getName());
+                orderView.getTxtProPrice().setText(product.getPrice());
+                orderView.getjSpinner1().setValue(1);
+                orderView.getTxtProTotal().setText(product.getPrice());
+                orderView.setProductPrice(Integer.parseInt(product.getPrice()));
+                orderView.setProductTotal(Integer.parseInt(product.getPrice()));
+                orderView.getBtnAddToCart().setEnabled(true);
+            } catch (NotFoundException ex) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            }
         }
 
     }
@@ -185,10 +193,9 @@ public class OrderController {
         public void keyReleased(KeyEvent e) {
             String name = orderView.getNameText();
             String category = orderView.getCBBSelectedItem();
-            if(name.trim().isEmpty()){
+            if (name.trim().isEmpty()) {
                 orderView.fillterProductByName(productService.getAllRecords());
-            }
-            else{
+            } else {
                 orderView.fillterProductByName(fillterProductByName(name, category));
             }
         }

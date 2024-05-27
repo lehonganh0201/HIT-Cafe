@@ -32,7 +32,7 @@ public class ProductServiceImpl implements IProductService{
     public List<Product> getAllRecords() {
         List<Product> products = productRepository.findAllProduct();
         if(products.isEmpty()){
-            throw new NotEnoughException("Product must be at least 1");
+            return new ArrayList<>();
         }
         return products;
     }

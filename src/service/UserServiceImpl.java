@@ -4,6 +4,7 @@
  */
 package service;
 
+import exception.ExistUserException;
 import exception.NotFoundUserException;
 import java.util.List;
 import model.User;
@@ -27,9 +28,13 @@ public class UserServiceImpl implements IUserService{
     @Override
     public UserResponse save(UserRequest request) {
         User saveUser = convertToUser(request);
-        saveUser.setStatus("false");
-        saveUser = userRepository.save(saveUser);
-        return convertToResponse(saveUser);
+        User checkUser = getUserByEmail(saveUser.getEmail());
+        if(checkUser == null){
+            saveUser.setStatus("false");
+            saveUser = userRepository.save(saveUser);
+            return convertToResponse(saveUser);
+        }
+        throw new ExistUserException("Your email is already existing");
     }
 
     @Override
@@ -38,7 +43,7 @@ public class UserServiceImpl implements IUserService{
        if(user!=null){
            return convertToResponse(user);
        }
-       throw new NotFoundUserException("Cannot found any user with : " +request.getEmail());
+       throw new NotFoundUserException("Incorrect username or password");
     }
 
     @Override

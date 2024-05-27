@@ -6,15 +6,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import view.Login;
 
 
-/**
- *
- * @author admin
- */
 public class CafeManagementSystem {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try{

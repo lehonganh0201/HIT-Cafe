@@ -1,5 +1,7 @@
 package controller;
 
+import exception.ExistUserException;
+import exception.NotFoundUserException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -16,6 +18,7 @@ import view.Login;
 import view.Signup;
 
 public class AuthController {
+
     private final IUserService userService = new UserServiceImpl(new UserRepositoryImpl());
     private Login loginView;
     private Signup signUpView;
@@ -47,7 +50,7 @@ public class AuthController {
             this.signUpView.addForgotPasswordListener(new ForgotPasswordListener());
         }
     }
-    
+
     public void showSignUpView() {
         if (signUpView != null) {
             signUpView.setVisible(true);
@@ -61,6 +64,7 @@ public class AuthController {
     }
 
     private class ShowLoginListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (signUpView != null) {
@@ -73,16 +77,27 @@ public class AuthController {
     }
 
     private class SaveListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (signUpView != null) {
-                UserRequest request = signUpView.getUserRequest();
-                userService.save(request);
+                try {
+                    UserRequest request = signUpView.getUserRequest();
+                    userService.save(request);
+                    signUpView.clear();
+                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: green\">Registration successfully!</b></html>", "Message", JOptionPane.DEFAULT_OPTION);
+                } catch (ExistUserException ex) {
+                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" +ex.getMessage()+ "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                    JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
 
     private class ExitListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             int response = JOptionPane.showConfirmDialog(null, "Do you really want to close the application?", "Select", JOptionPane.YES_NO_OPTION);
@@ -93,6 +108,7 @@ public class AuthController {
     }
 
     private class SignUpListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
@@ -105,6 +121,7 @@ public class AuthController {
     }
 
     private class ForgotPasswordListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             ForgotPassword forgotPassword = new ForgotPassword();
@@ -121,27 +138,33 @@ public class AuthController {
     }
 
     private class LoginListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
-                LoginRequest request = loginView.getLoginRequest();
-                UserResponse user = userService.login(request);
+                try {
+                    LoginRequest request = loginView.getLoginRequest();
+                    UserResponse user = userService.login(request);
 
-                if (user == null) {
-                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Incorrect Username or Password</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    if (user.getStatus().equals("false")) {
-                        ImageIcon icon = new ImageIcon("src/popupicon/wait.png");
-                        JOptionPane.showMessageDialog(null, "<html><b>Wait for Admin Approval</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE, icon);
-                        loginView.clear();
-                    } else if (user.getStatus().equals("true")) {
-                        loginView.setVisible(false);
-                        Home homeView = new Home();
-                        HomeController homeController = new HomeController(user.getEmail(), homeView);
-                        homeController.showHomeView();
+                    if (user != null) {
+                        if (user.getStatus().equals("false")) {
+                            ImageIcon icon = new ImageIcon("src/popupicon/wait.png");
+                            JOptionPane.showMessageDialog(null, "<html><b>Wait for Admin Approval</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE, icon);
+                            loginView.clear();
+                        } else if (user.getStatus().equals("true")) {
+                            loginView.setVisible(false);
+                            Home homeView = new Home();
+                            HomeController homeController = new HomeController(user.getEmail(), homeView);
+                            homeController.showHomeView();
+                        }
                     }
+                } catch (NotFoundUserException ex) {
+                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Incorrect Username or Password</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }
+
 }
