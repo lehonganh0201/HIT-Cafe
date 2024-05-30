@@ -36,18 +36,26 @@ import view.PlaceOrder;
 import common.OpenPdf;
 import exception.NotFoundException;
 import javax.swing.JOptionPane;
+import view.RevenueView;
 
 /**
  *
  * @author PC
  */
 public class OrderController {
-
     private final IProductService productService = new ProductServiceImpl(new ProductRepositoryImpl());
     private final IBillService billService = new BillServiceImpl(new BillRepositoryImpl());
     private final ICategoryService categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl());
     private PlaceOrder orderView;
+    private RevenueView revenueView;
     private String email;
+    
+    public OrderController(RevenueView revenueView, String email) {
+        this.revenueView = revenueView;
+        this.email = email;
+        this.revenueView.addExitListener(new ReturnHomeListener());
+        this.revenueView.setRevenue(billService.getRevenue());
+    }
 
     public OrderController(PlaceOrder orderView, String email) {
         this.email = email;
@@ -62,9 +70,15 @@ public class OrderController {
         this.orderView.addChangeSelected(new BoxChangeSelectedListener());
         this.orderView.addGenaratedBillListener(new GenaratedBillListener());
     }
-
+    
+    
+    
     void showOrderView() {
         orderView.setVisible(true);
+    }
+    
+    void showRevenueView(){
+        revenueView.setVisible(true);
     }
 
     public List<Product> fillterProductByName(String name, String category) {
@@ -105,7 +119,7 @@ public class OrderController {
             }
             doc.add(tb1);
             doc.add(starLine);
-            Paragraph thanksMess = new Paragraph("Thank yor very much! Please visit again.");
+            Paragraph thanksMess = new Paragraph("Thank your very much! Please visit again.");
             doc.add(thanksMess);
             OpenPdf.openById(String.valueOf(billId));
         } catch (Exception ex) {
@@ -210,6 +224,9 @@ public class OrderController {
         public void actionPerformed(ActionEvent e) {
             if (orderView != null) {
                 orderView.setVisible(false);
+            }
+            if(revenueView != null){
+                revenueView.setVisible(false);
             }
             Home homeView = new Home();
             HomeController homeController = new HomeController(email, homeView);

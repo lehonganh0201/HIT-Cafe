@@ -5,6 +5,7 @@
 package service.IService;
 
 import java.util.List;
+import java.util.Map;
 import model.Bill;
 
 /**
@@ -17,4 +18,6 @@ public interface IBillService {
     public List<Bill> getAllBillRecordsByDESC(String date);
     public List<Bill> getAllBillRecords();
     public Integer getNextBillId();
+    public Double calculateMonthlyRevenue(Integer month, String year);
+    public List<Double> getRevenue();
 }

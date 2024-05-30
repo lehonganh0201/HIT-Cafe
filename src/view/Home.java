@@ -24,7 +24,7 @@ public class Home extends javax.swing.JFrame {
                 btnNewProduct.setVisible(false);
                 btnViewEditDeleteProduct.setVisible(false);
                 btnVerifyUsers.setVisible(false);
-                
+                btnStatistics.setVisible(false);
         }
     }
 
@@ -47,6 +47,7 @@ public class Home extends javax.swing.JFrame {
         btnNewProduct = new javax.swing.JButton();
         btnViewEditDeleteProduct = new javax.swing.JButton();
         btnVerifyUsers = new javax.swing.JButton();
+        btnStatistics = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -153,6 +154,16 @@ public class Home extends javax.swing.JFrame {
         });
         getContentPane().add(btnVerifyUsers, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 340, -1, -1));
 
+        btnStatistics.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnStatistics.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/chart.png"))); // NOI18N
+        btnStatistics.setText("Statistics");
+        btnStatistics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStatisticsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnStatistics, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 470, 130, 40));
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/CAFEHOME (1).png"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1370, -1));
 
@@ -199,6 +210,10 @@ public class Home extends javax.swing.JFrame {
     
     }//GEN-LAST:event_btnChangeQuestionActionPerformed
 
+    private void btnStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatisticsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnStatisticsActionPerformed
+
     public void addLogoutListener(ActionListener listener){
         btnLogout.addActionListener(listener);
     }
@@ -238,6 +253,10 @@ public class Home extends javax.swing.JFrame {
     public void addChangeQuestionListener(ActionListener listener){
         btnChangeQuestion.addActionListener(listener);
     }
+    
+    public void addToStatisticsListener(ActionListener listener){
+        btnStatistics.addActionListener(listener);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCategory;
@@ -247,6 +266,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNewProduct;
     private javax.swing.JButton btnOrder;
+    private javax.swing.JButton btnStatistics;
     private javax.swing.JButton btnVerifyUsers;
     private javax.swing.JButton btnViewBill;
     private javax.swing.JButton btnViewEditDeleteProduct;

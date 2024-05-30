@@ -7,6 +7,9 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import repository.BillRepositoryImpl;
+import service.BillServiceImpl;
+import service.IService.IBillService;
 import view.AddNewProduct;
 import view.ChangePassword;
 import view.ChangeSecurityQuestion;
@@ -14,6 +17,7 @@ import view.Home;
 import view.Login;
 import view.ManageCategory;
 import view.PlaceOrder;
+import view.RevenueView;
 import view.VetifyUsers;
 import view.ViewBillsOrderPlaceDetails;
 import view.ViewEditDeleteProduct;
@@ -23,7 +27,7 @@ import view.ViewEditDeleteProduct;
  * @author PC
  */
 public class HomeController {
-
+    private final IBillService billService = new BillServiceImpl(new BillRepositoryImpl());
     private String email = "";
     private final Home homeView;
 
@@ -41,10 +45,25 @@ public class HomeController {
         homeView.addOrderListener(new OrderListener());
         homeView.addExitListener(new ExitListener());
         homeView.addLogoutListener(new LogoutListener());
+        homeView.addToStatisticsListener(new StatisticsListener());
     }
 
     public void showHomeView() {
         homeView.setVisible(true);
+    }
+
+    private class StatisticsListener implements ActionListener {
+
+        public StatisticsListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            homeView.setVisible(false);
+            RevenueView revenueView = new RevenueView();
+            OrderController orderController = new OrderController(revenueView, email);
+            orderController.showRevenueView();
+        }
     }
 
     private class NewProductListener implements ActionListener {
