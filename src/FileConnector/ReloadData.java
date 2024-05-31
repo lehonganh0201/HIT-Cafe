@@ -19,9 +19,9 @@ public class ReloadData implements Serializable {
     static Map<Integer, User> usersMap = new LinkedHashMap<>();
 
     public static void fakeData() {
-        usersMap.put(1, new User(1, "Le Hong Anh", "lehonganh@gmail.com", "0909123456", "123 Đường ABC", "lehonganh", "Tên thú cưng của bạn?", "Miu", "true"));
-        usersMap.put(2, new User(2, "Vu Thi Hong Nhung", "vuthihongnhung@gmail.com", "0909876543", "456 Đường DEF", "vuthihongnhung", "Tên trường tiểu học của bạn?", "Trường XYZ", "true"));
-        usersMap.put(2, new User(2, "Nguyen Huy Hoang", "nguyenhuyhoang@gmail.com", "0909876543", "456 Đường DEF", "nguyenhuyhoang", "Tên trường tiểu học của bạn?", "Hehehe", "false"));
+        usersMap.put(1, new User(1, "Le Hong Anh", "hle646698@gmail.com", "0909123456", "123 Đường ABC", "lehonganh", "Tên thú cưng của bạn?", "Miu", "true"));
+        usersMap.put(2, new User(2, "Vu Thi Hong Nhung", "vthn303@gmail.com", "0909876543", "456 Đường DEF", "vuthihongnhung", "Tên trường tiểu học của bạn?", "Trường XYZ", "true"));
+        usersMap.put(2, new User(2, "Nguyen Huy Hoang", "hoangnh4204gmail.com", "0909876543", "456 Đường DEF", "nguyenhuyhoang", "Tên trường tiểu học của bạn?", "Hehehe", "false"));
         usersMap.put(2, new User(2, "Khong xac dinh", "test@gmail.com", "0909876543", "456 Đường DEF", "test", "Tên trường tiểu học của bạn?", "Hehehe", "true"));
         usersMap.put(3, new User(3, "Admin","admin@gmail.com","0123456789","Ha Noi","admin123","Tên bạn là gì?","admin","true"));
         

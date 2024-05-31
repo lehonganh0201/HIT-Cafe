@@ -40,7 +40,7 @@ public class RevenueView extends javax.swing.JFrame {
         dataset = new DefaultCategoryDataset();
 
         for (int i = 0; i <= 11; i++) {
-            dataset.addValue(revenue.get(i), months[i], "Thống kê số lượng sự kiện được tạo năm " + year);
+            dataset.addValue(revenue.get(i), months[i], "Thống kê lượng doanh thu trong năm " + year);
         }
 
         chart = ChartFactory.createBarChart(

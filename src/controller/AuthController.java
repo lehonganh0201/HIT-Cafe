@@ -14,25 +14,33 @@ import service.IService.IUserService;
 import service.UserServiceImpl;
 import view.ForgotPassword;
 import view.Home;
+import view.IntermediateView;
 import view.Login;
+import view.MailPassword;
 import view.Signup;
 
 public class AuthController {
-
+    
     private final IUserService userService = new UserServiceImpl(new UserRepositoryImpl());
     private Login loginView;
+    private IntermediateView intermediateView;
     private Signup signUpView;
-
+    
     public AuthController(Login login) {
         this.loginView = login;
         initLoginListeners();
     }
-
+    
     public AuthController(Signup signUpView) {
         this.signUpView = signUpView;
         initSignUpListeners();
     }
-
+    
+    public AuthController(IntermediateView intermediateView) {
+        this.intermediateView = intermediateView;
+        initIntermediateListeners();
+    }
+    
     private void initLoginListeners() {
         if (loginView != null) {
             this.loginView.addLoginListener(new LoginListener());
@@ -41,7 +49,7 @@ public class AuthController {
             this.loginView.addExitListener(new ExitListener());
         }
     }
-
+    
     private void initSignUpListeners() {
         if (signUpView != null) {
             this.signUpView.addExitListener(new ExitListener());
@@ -50,34 +58,83 @@ public class AuthController {
             this.signUpView.addForgotPasswordListener(new ForgotPasswordListener());
         }
     }
-
+    
     public void showSignUpView() {
         if (signUpView != null) {
             signUpView.setVisible(true);
         }
     }
-
+    
     public void showLoginView() {
         if (loginView != null) {
             loginView.setVisible(true);
         }
     }
+    
+    public void showIntermediateView() {
+        if (intermediateView != null) {
+            intermediateView.setVisible(true);
+        }
+    }
+    
+    private void initIntermediateListeners() {
+        if (intermediateView != null) {
+            intermediateView.addBackLoginListener(new ShowLoginListener());
+            intermediateView.addQuestionListener(new ForgotQuestionListener());
+            intermediateView.addMailListener(new MailOTPListener());
+        }
+    }
 
-    private class ShowLoginListener implements ActionListener {
+    private class ForgotQuestionListener implements ActionListener {
+
+        public ForgotQuestionListener() {
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (signUpView != null) {
-                Login login = new Login();
-                AuthController authController = new AuthController(login);
-                authController.showLoginView();
-                signUpView.setVisible(false);
+            ForgotPassword forgotPassword = new ForgotPassword();
+            UserController userController = new UserController(forgotPassword);
+            userController.showForgotPassword();
+            if(intermediateView != null){
+                intermediateView.setVisible(false);
             }
         }
     }
 
-    private class SaveListener implements ActionListener {
+    private class MailOTPListener implements ActionListener {
 
+        public MailOTPListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            MailPassword forgotPassword = new MailPassword();
+            UserController userController = new UserController(forgotPassword);
+            userController.showMailPassword();
+            if(intermediateView != null){
+                intermediateView.setVisible(false);
+            }
+        }
+    }
+    
+    private class ShowLoginListener implements ActionListener {
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Login login = new Login();
+            AuthController authController = new AuthController(login);
+            authController.showLoginView();
+            if (signUpView != null) {
+                signUpView.setVisible(false);
+            }
+            if (intermediateView != null) {
+                intermediateView.setVisible(false);
+            }
+        }
+    }
+    
+    private class SaveListener implements ActionListener {
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             if (signUpView != null) {
@@ -87,7 +144,7 @@ public class AuthController {
                     signUpView.clear();
                     JOptionPane.showMessageDialog(null, "<html><b style=\"color: green\">Registration successfully!</b></html>", "Message", JOptionPane.DEFAULT_OPTION);
                 } catch (ExistUserException ex) {
-                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" +ex.getMessage()+ "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     System.out.println(ex);
                     JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -95,9 +152,9 @@ public class AuthController {
             }
         }
     }
-
+    
     private class ExitListener implements ActionListener {
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             int response = JOptionPane.showConfirmDialog(null, "Do you really want to close the application?", "Select", JOptionPane.YES_NO_OPTION);
@@ -106,9 +163,9 @@ public class AuthController {
             }
         }
     }
-
+    
     private class SignUpListener implements ActionListener {
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
@@ -119,15 +176,15 @@ public class AuthController {
             }
         }
     }
-
+    
     private class ForgotPasswordListener implements ActionListener {
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
-            ForgotPassword forgotPassword = new ForgotPassword();
-            UserController userController = new UserController(forgotPassword);
-            userController.showForgotPassword();
-
+            IntermediateView intermediateView = new IntermediateView();
+            AuthController authController = new AuthController(intermediateView);
+            authController.showIntermediateView();
+            
             if (loginView != null) {
                 loginView.setVisible(false);
             }
@@ -136,16 +193,16 @@ public class AuthController {
             }
         }
     }
-
+    
     private class LoginListener implements ActionListener {
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
                 try {
                     LoginRequest request = loginView.getLoginRequest();
                     UserResponse user = userService.login(request);
-
+                    
                     if (user != null) {
                         if (user.getStatus().equals("false")) {
                             ImageIcon icon = new ImageIcon("src/popupicon/wait.png");
@@ -166,5 +223,5 @@ public class AuthController {
             }
         }
     }
-
+    
 }

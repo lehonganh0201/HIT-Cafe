@@ -7,15 +7,17 @@ package view;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
 /**
  *
  * @author admin
  */
 public class ForgotPassword extends javax.swing.JFrame {
+
     private String dbAnswer = null;
-    private String email  = null;
-    private String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
-    
+    private String email = null;
+    private final String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
+
     /**
      * Creates new form ForgotPassword
      */
@@ -25,7 +27,7 @@ public class ForgotPassword extends javax.swing.JFrame {
         btnSearch.setEnabled(false);
         txtSeQue.setEditable(false);
     }
-    
+
     public void clear() {
         btnUpdate.setEnabled(false);
         btnSearch.setEnabled(false);
@@ -35,27 +37,27 @@ public class ForgotPassword extends javax.swing.JFrame {
         txtAnswer.setText("");
         txtNewPassword.setText("");
     }
-    
+
     public void validateEmail() {
         email = txtEmail.getText();
-        if(email.matches(emailPattern))
+        if (email.matches(emailPattern)) {
             btnSearch.setEnabled(true);
-        else
+        } else {
             btnSearch.setEnabled(false);
+        }
     }
-    
+
     public void validateFields() {
-    String password = new String(txtNewPassword.getPassword());
-    String answer = txtAnswer.getText();
-    String securityQuestion = txtSeQue.getText();
+        String password = new String(txtNewPassword.getPassword());
+        String answer = txtAnswer.getText();
+        String securityQuestion = txtSeQue.getText();
 
-    if (!password.equals("") && !answer.equals("") && !securityQuestion.equals("")) {
-        btnUpdate.setEnabled(true);
-    } else {
-        btnUpdate.setEnabled(false);
+        if (!password.equals("") && !answer.equals("") && !securityQuestion.equals("")) {
+            btnUpdate.setEnabled(true);
+        } else {
+            btnUpdate.setEnabled(false);
+        }
     }
-}
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -223,11 +225,11 @@ public class ForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNewPasswordActionPerformed
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
-       
+
     }//GEN-LAST:event_btnSignUpActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-       
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void txtEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyReleased
@@ -251,7 +253,7 @@ public class ForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNewPasswordKeyReleased
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        
+
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -264,38 +266,38 @@ public class ForgotPassword extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-      
+
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    public void addExitListener(ActionListener listener){
+    public void addExitListener(ActionListener listener) {
         btnExit.addActionListener(listener);
     }
-    
-    public void addUpdatedListener(ActionListener listener){
+
+    public void addUpdatedListener(ActionListener listener) {
         btnUpdate.addActionListener(listener);
     }
-    
-    public void addSearchListener(ActionListener listener){
+
+    public void addSearchListener(ActionListener listener) {
         btnSearch.addActionListener(listener);
     }
-    
-    public void addLoginListener(ActionListener listener){
+
+    public void addLoginListener(ActionListener listener) {
         btnLogin.addActionListener(listener);
     }
-    
-    public void addSignUpListener(ActionListener listener){
+
+    public void addSignUpListener(ActionListener listener) {
         btnSignUp.addActionListener(listener);
     }
-    
-    public String getEmail(){
+
+    public String getEmail() {
         return txtEmail.getText();
     }
-    
-    public String getAnswer(){
+
+    public String getAnswer() {
         return txtAnswer.getText();
     }
-    
-    public String getNewPassword(){
+
+    public String getNewPassword() {
         return new String(txtNewPassword.getPassword());
     }
 

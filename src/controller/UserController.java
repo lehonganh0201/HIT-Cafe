@@ -4,6 +4,7 @@
  */
 package controller;
 
+import common.SendMail;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -11,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 import model.User;
@@ -23,6 +25,7 @@ import view.ChangeSecurityQuestion;
 import view.ForgotPassword;
 import view.Home;
 import view.Login;
+import view.MailPassword;
 import view.Signup;
 import view.VetifyUsers;
 
@@ -36,8 +39,10 @@ public class UserController {
     private ChangePassword changePasswordView;
     private ChangeSecurityQuestion changeSecurityQuestionView;
     private ForgotPassword forgotPassword;
+    private MailPassword mailPassword;
     private String accountAnswer = "";
     private String email = "";
+    private String otp = "";
 
     public UserController(ForgotPassword forgotPassword) {
         this.forgotPassword = forgotPassword;
@@ -47,6 +52,16 @@ public class UserController {
         this.forgotPassword.addLoginListener(new LoginListener());
         this.forgotPassword.addSignUpListener(new SignUpListener());
     }
+    
+     public UserController(MailPassword mailPassword) {
+        this.mailPassword = mailPassword;
+        this.mailPassword.addExitListener(new ExitListener());
+        this.mailPassword.addLoginListener(new LoginListener());
+        this.mailPassword.addSignUpListener(new SignUpListener());
+        this.mailPassword.addUpdateListener(new UpdatedMailListener());
+        this.mailPassword.addSendListener(new SendMailListener());
+    }
+
 
     public UserController(VetifyUsers vetiryUsersView, String email) {
         this.email = email;
@@ -87,6 +102,56 @@ public class UserController {
 
     public void showChangeQuestionView() {
         changeSecurityQuestionView.setVisible(true);
+    }
+    
+    public void showMailPassword(){
+        mailPassword.setVisible(true);
+    }
+    
+    public static String generateRandomNumbers(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int digit = random.nextInt(10);
+            sb.append(digit);
+        }
+
+        return sb.toString();
+    }
+
+    private class SendMailListener implements ActionListener {
+
+        public SendMailListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String confirmCode = generateRandomNumbers(6);
+            otp = confirmCode;
+            SendMail send = new SendMail(mailPassword.getEmail());
+            send.setOtp(confirmCode);
+            send.sendMail(mailPassword.getEmail());
+        }
+    }
+
+    private class UpdatedMailListener implements ActionListener {
+
+        public UpdatedMailListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(!otp.equals(mailPassword.getOtp())){
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your OTP is not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                String password = mailPassword.getNewPassword();
+                userService.update(mailPassword.getEmail(), password);
+                mailPassword.clear();
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Change password successfully!</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
     private class UpdatedSecurity implements ActionListener {
@@ -200,7 +265,12 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            forgotPassword.setVisible(false);
+            if(forgotPassword != null){
+                forgotPassword.setVisible(false);
+            }
+            if(mailPassword != null){
+                mailPassword.setVisible(false);
+            }
             Login loginView = new Login();
             AuthController auth = new AuthController(loginView);
             auth.showLoginView();
@@ -214,7 +284,12 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            forgotPassword.setVisible(false);
+            if(forgotPassword != null){
+                forgotPassword.setVisible(false);
+            }
+            if(mailPassword != null){
+                mailPassword.setVisible(false);
+            }
             Signup signUpV = new Signup();
             AuthController auth = new AuthController(signUpV);
             auth.showSignUpView();
