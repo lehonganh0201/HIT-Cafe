@@ -5,6 +5,7 @@
 package controller;
 
 import common.SendMail;
+import exception.NotFoundUserException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -16,6 +17,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 import repository.UserRepositoryImpl;
 import response.UserResponse;
 import service.IService.IUserService;
@@ -34,6 +36,7 @@ import view.VetifyUsers;
  * @author PC
  */
 public class UserController {
+
     private final IUserService userService = new UserServiceImpl(new UserRepositoryImpl());
     private VetifyUsers vetiryUsersView;
     private ChangePassword changePasswordView;
@@ -52,8 +55,8 @@ public class UserController {
         this.forgotPassword.addLoginListener(new LoginListener());
         this.forgotPassword.addSignUpListener(new SignUpListener());
     }
-    
-     public UserController(MailPassword mailPassword) {
+
+    public UserController(MailPassword mailPassword) {
         this.mailPassword = mailPassword;
         this.mailPassword.addExitListener(new ExitListener());
         this.mailPassword.addLoginListener(new LoginListener());
@@ -61,7 +64,6 @@ public class UserController {
         this.mailPassword.addUpdateListener(new UpdatedMailListener());
         this.mailPassword.addSendListener(new SendMailListener());
     }
-
 
     public UserController(VetifyUsers vetiryUsersView, String email) {
         this.email = email;
@@ -103,11 +105,11 @@ public class UserController {
     public void showChangeQuestionView() {
         changeSecurityQuestionView.setVisible(true);
     }
-    
-    public void showMailPassword(){
+
+    public void showMailPassword() {
         mailPassword.setVisible(true);
     }
-    
+
     public static String generateRandomNumbers(int length) {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
@@ -142,10 +144,9 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!otp.equals(mailPassword.getOtp())){
+            if (!otp.equals(mailPassword.getOtp())) {
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your OTP is not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
+            } else {
                 String password = mailPassword.getNewPassword();
                 userService.update(mailPassword.getEmail(), password);
                 mailPassword.clear();
@@ -161,11 +162,16 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String password = changeSecurityQuestionView.getPassword();
-            String question = changeSecurityQuestionView.getSecurityQuest();
-            String answer = changeSecurityQuestionView.getNewAnswer();
-            userService.changeSecurityQuestion(email,password , question, answer);
-            changeSecurityQuestionView.clear();
+            try {
+                String password = changeSecurityQuestionView.getPassword();
+                String question = changeSecurityQuestionView.getSecurityQuest();
+                String answer = changeSecurityQuestionView.getNewAnswer();
+                userService.changeSecurityQuestion(email, password, question, answer);
+                changeSecurityQuestionView.clear();
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Your security questions updated successfully!</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            } catch (NotFoundUserException ex) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your old password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -177,17 +183,22 @@ public class UserController {
         @Override
         public void actionPerformed(ActionEvent e) {
             String oldPassword = changePasswordView.getOldPassword();
-            User user = userService.getUserByEmail(email);
-            if(user!=null){
-                if(!user.getPassword().equals(oldPassword)){
-                    JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your old password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            try {
+                User user = userService.getUserByEmail(email);
+                if (user != null) {
+                    if (!BCrypt.checkpw(changePasswordView.getOldPassword(), user.getPassword())) {
+                        JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your old password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        String newPassword = changePasswordView.getNewPassword();
+                        userService.changePassword(email, oldPassword, newPassword);
+                        changePasswordView.clear();
+                        JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Your password updated successfully!</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                else{
-                    String newPassword = changePasswordView.getNewPassword();
-                    userService.changePassword(email, oldPassword, newPassword);
-                    changePasswordView.clear();
-                }
+            } catch (NotFoundUserException ex) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your old password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
             }
+
         }
     }
 
@@ -198,18 +209,18 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           if(vetiryUsersView != null){
-               vetiryUsersView.setVisible(false);
-           }
-           if(changePasswordView != null){
-               changePasswordView.setVisible(false);
-           }
-           if(changeSecurityQuestionView != null){
-               changeSecurityQuestionView.setVisible(false);
-           }
-           Home homeView = new Home();
-           HomeController homeController = new HomeController(email, homeView);
-           homeController.showHomeView();
+            if (vetiryUsersView != null) {
+                vetiryUsersView.setVisible(false);
+            }
+            if (changePasswordView != null) {
+                changePasswordView.setVisible(false);
+            }
+            if (changeSecurityQuestionView != null) {
+                changeSecurityQuestionView.setVisible(false);
+            }
+            Home homeView = new Home();
+            HomeController homeController = new HomeController(email, homeView);
+            homeController.showHomeView();
         }
     }
 
@@ -225,11 +236,10 @@ public class UserController {
                     .getAllUsersExceptAdmin().stream()
                     .filter(user -> user.getEmail().contains(email))
                     .toList();
-            
+
             vetiryUsersView.reloadTable(usersData);
         }
-        
-        
+
     }
 
     private class UserTableMouseListener extends MouseAdapter {
@@ -252,7 +262,7 @@ public class UserController {
 
             int a = JOptionPane.showConfirmDialog(null, "Do you want to change status of " + email + "?");
             if (a == JOptionPane.YES_OPTION) {
-                userService.changeStatus(email, status); 
+                userService.changeStatus(email, status);
                 vetiryUsersView.reloadTable(userService.getAllUsersExceptAdmin());
             }
         }
@@ -265,10 +275,10 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(forgotPassword != null){
+            if (forgotPassword != null) {
                 forgotPassword.setVisible(false);
             }
-            if(mailPassword != null){
+            if (mailPassword != null) {
                 mailPassword.setVisible(false);
             }
             Login loginView = new Login();
@@ -284,10 +294,10 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(forgotPassword != null){
+            if (forgotPassword != null) {
                 forgotPassword.setVisible(false);
             }
-            if(mailPassword != null){
+            if (mailPassword != null) {
                 mailPassword.setVisible(false);
             }
             Signup signUpV = new Signup();
@@ -303,14 +313,14 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           String answer = forgotPassword.getAnswer();
-           String newPassword = forgotPassword.getNewPassword();
-           if(answer.equals(accountAnswer)){
-               userService.update(forgotPassword.getEmail(), newPassword);
-               JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Change password successfully!</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE);
-           }else{
-               JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Incorrect Answer</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
-           }
+            String answer = forgotPassword.getAnswer();
+            String newPassword = forgotPassword.getNewPassword();
+            if (answer.equals(accountAnswer)) {
+                userService.update(forgotPassword.getEmail(), newPassword);
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Change password successfully!</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Incorrect Answer</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -322,10 +332,9 @@ public class UserController {
         @Override
         public void actionPerformed(ActionEvent e) {
             User theUser = userService.getUserByEmail(forgotPassword.getEmail());
-            if(theUser == null){
+            if (theUser == null) {
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Incorrect Email</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
+            } else {
                 forgotPassword.getBtnSearch().setEnabled(false);
                 forgotPassword.getTxtEmail().setEnabled(false);
                 accountAnswer = theUser.getAnswer();

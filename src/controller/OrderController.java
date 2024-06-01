@@ -152,7 +152,7 @@ public class OrderController {
             bill.setCreateBy(email);
             billService.saveBill(bill);
 
-            createPdf(customerName, billService.getNextBillId(), total);
+            createPdf(customerName, orderView.getBillId(), total);
             orderView.clearProductFields();
         }
     }

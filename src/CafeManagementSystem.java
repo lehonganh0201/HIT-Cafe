@@ -6,7 +6,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import view.Login;
 
 public class CafeManagementSystem {
-
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try{
@@ -18,7 +17,7 @@ public class CafeManagementSystem {
             
             Login loginView = new Login();
             AuthController authController = new AuthController(loginView);
-            authController.showLoginView();            
+            authController.showLoginView();
         });
     }
 }

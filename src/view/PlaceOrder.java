@@ -512,7 +512,9 @@ public class PlaceOrder extends javax.swing.JFrame {
         return jTable2;
     }
     
-    
+    public Integer getBillId(){
+        return billId;
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddToCart;

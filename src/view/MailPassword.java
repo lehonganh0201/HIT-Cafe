@@ -68,6 +68,7 @@ public class MailPassword extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
@@ -87,6 +88,7 @@ public class MailPassword extends javax.swing.JFrame {
         jLabel5.setText("Enter New Password :");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 350, -1, -1));
 
+        txtEmail.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtEmailKeyReleased(evt);
@@ -94,6 +96,7 @@ public class MailPassword extends javax.swing.JFrame {
         });
         getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 180, 490, 30));
 
+        txtOtp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtOtp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtOtpKeyReleased(evt);
@@ -134,6 +137,7 @@ public class MailPassword extends javax.swing.JFrame {
         btnSend.setText("Send");
         getContentPane().add(btnSend, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 180, -1, -1));
 
+        txtPass.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPassKeyReleased(evt);

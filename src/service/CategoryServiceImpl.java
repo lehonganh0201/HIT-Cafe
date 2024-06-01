@@ -41,5 +41,4 @@ public class CategoryServiceImpl implements ICategoryService{
     public void deleteCategoryById(Integer id) {
         categoryRepository.deleteById(id);
     }
-    
 }

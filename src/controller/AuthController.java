@@ -1,9 +1,11 @@
 package controller;
 
+import common.SendMail;
 import exception.ExistUserException;
 import exception.NotFoundUserException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import repository.UserRepositoryImpl;
@@ -20,27 +22,28 @@ import view.MailPassword;
 import view.Signup;
 
 public class AuthController {
-    
+
     private final IUserService userService = new UserServiceImpl(new UserRepositoryImpl());
     private Login loginView;
     private IntermediateView intermediateView;
     private Signup signUpView;
-    
+    private String otp = "";
+
     public AuthController(Login login) {
         this.loginView = login;
         initLoginListeners();
     }
-    
+
     public AuthController(Signup signUpView) {
         this.signUpView = signUpView;
         initSignUpListeners();
     }
-    
+
     public AuthController(IntermediateView intermediateView) {
         this.intermediateView = intermediateView;
         initIntermediateListeners();
     }
-    
+
     private void initLoginListeners() {
         if (loginView != null) {
             this.loginView.addLoginListener(new LoginListener());
@@ -49,39 +52,67 @@ public class AuthController {
             this.loginView.addExitListener(new ExitListener());
         }
     }
-    
+
     private void initSignUpListeners() {
         if (signUpView != null) {
             this.signUpView.addExitListener(new ExitListener());
             this.signUpView.addSaveListener(new SaveListener());
             this.signUpView.addLoginListener(new ShowLoginListener());
             this.signUpView.addForgotPasswordListener(new ForgotPasswordListener());
+            this.signUpView.addSendListener(new SendMailListener());
         }
     }
-    
+
     public void showSignUpView() {
         if (signUpView != null) {
             signUpView.setVisible(true);
         }
     }
-    
+
     public void showLoginView() {
         if (loginView != null) {
             loginView.setVisible(true);
         }
     }
-    
+
     public void showIntermediateView() {
         if (intermediateView != null) {
             intermediateView.setVisible(true);
         }
     }
-    
+
+    public static String generateRandomNumbers(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int digit = random.nextInt(10);
+            sb.append(digit);
+        }
+
+        return sb.toString();
+    }
+
     private void initIntermediateListeners() {
         if (intermediateView != null) {
             intermediateView.addBackLoginListener(new ShowLoginListener());
             intermediateView.addQuestionListener(new ForgotQuestionListener());
             intermediateView.addMailListener(new MailOTPListener());
+        }
+    }
+
+    private class SendMailListener implements ActionListener {
+
+        public SendMailListener() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String confirmCode = generateRandomNumbers(6);
+            otp = confirmCode;
+            SendMail send = new SendMail(signUpView.getEmail());
+            send.setOtp(confirmCode);
+            send.sendMail(signUpView.getEmail());
         }
     }
 
@@ -95,7 +126,7 @@ public class AuthController {
             ForgotPassword forgotPassword = new ForgotPassword();
             UserController userController = new UserController(forgotPassword);
             userController.showForgotPassword();
-            if(intermediateView != null){
+            if (intermediateView != null) {
                 intermediateView.setVisible(false);
             }
         }
@@ -111,14 +142,14 @@ public class AuthController {
             MailPassword forgotPassword = new MailPassword();
             UserController userController = new UserController(forgotPassword);
             userController.showMailPassword();
-            if(intermediateView != null){
+            if (intermediateView != null) {
                 intermediateView.setVisible(false);
             }
         }
     }
-    
+
     private class ShowLoginListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Login login = new Login();
@@ -132,29 +163,34 @@ public class AuthController {
             }
         }
     }
-    
+
     private class SaveListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (signUpView != null) {
-                try {
-                    UserRequest request = signUpView.getUserRequest();
-                    userService.save(request);
-                    signUpView.clear();
-                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: green\">Registration successfully!</b></html>", "Message", JOptionPane.DEFAULT_OPTION);
-                } catch (ExistUserException ex) {
-                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                    JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                if (signUpView.getOtp().equals(otp)) {
+                    try {
+                        UserRequest request = signUpView.getUserRequest();
+                        userService.save(request);
+                        signUpView.clear();
+                        JOptionPane.showMessageDialog(null, "<html><b style=\"color: green\">Registration successfully!</b></html>", "Message", JOptionPane.DEFAULT_OPTION);
+                    } catch (ExistUserException ex) {
+                        JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                        JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Your one-time Password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         }
     }
-    
+
     private class ExitListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             int response = JOptionPane.showConfirmDialog(null, "Do you really want to close the application?", "Select", JOptionPane.YES_NO_OPTION);
@@ -163,9 +199,9 @@ public class AuthController {
             }
         }
     }
-    
+
     private class SignUpListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
@@ -176,15 +212,15 @@ public class AuthController {
             }
         }
     }
-    
+
     private class ForgotPasswordListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             IntermediateView intermediateView = new IntermediateView();
             AuthController authController = new AuthController(intermediateView);
             authController.showIntermediateView();
-            
+
             if (loginView != null) {
                 loginView.setVisible(false);
             }
@@ -193,16 +229,16 @@ public class AuthController {
             }
         }
     }
-    
+
     private class LoginListener implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
                 try {
                     LoginRequest request = loginView.getLoginRequest();
                     UserResponse user = userService.login(request);
-                    
+
                     if (user != null) {
                         if (user.getStatus().equals("false")) {
                             ImageIcon icon = new ImageIcon("src/popupicon/wait.png");
@@ -223,5 +259,5 @@ public class AuthController {
             }
         }
     }
-    
+
 }

@@ -4,10 +4,12 @@
  */
 package service;
 
+import common.PasswordEncryptor;
 import exception.ExistUserException;
 import exception.NotFoundUserException;
 import java.util.List;
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 import repository.IRepository.IUserRepository;
 import request.LoginRequest;
 import request.UserRequest;
@@ -39,8 +41,8 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public UserResponse login(LoginRequest request) {
-       User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
-       if(user!=null){
+       User user = userRepository.findByEmail(request.getEmail());
+       if(user!=null && BCrypt.checkpw(request.getPassword(), user.getPassword())){
            return convertToResponse(user);
        }
        throw new NotFoundUserException("Incorrect username or password");
@@ -59,7 +61,7 @@ public class UserServiceImpl implements IUserService{
     public User update(String email, String newPassword) {
        User user = userRepository.findByEmail(email);
        if(user != null){
-           user.setPassword(newPassword);
+           user.setPassword(PasswordEncryptor.hashPassword(newPassword));
            userRepository.update(user);
            return user;
        }
@@ -79,9 +81,9 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public User changePassword(String email, String oldPassword, String newPassword) {
-        User user = userRepository.findByEmailAndPassword(email,oldPassword);
-       if(user != null){
-           user.setPassword(newPassword);
+        User user = userRepository.findByEmail(email);
+       if(user != null && BCrypt.checkpw(oldPassword, user.getPassword())){
+           user.setPassword(PasswordEncryptor.hashPassword(newPassword));
            userRepository.update(user);
            return user;
        }
@@ -90,8 +92,8 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public User changeSecurityQuestion(String email, String password, String securityQuestion, String answer) {
-        User user = userRepository.findByEmailAndPassword(email, password);
-       if(user != null){
+        User user = userRepository.findByEmail(email);
+       if(user != null && BCrypt.checkpw(password, user.getPassword())){
            user.setSecurityQuestion(securityQuestion);
            user.setAnswer(answer);
            userRepository.update(user);
@@ -106,7 +108,7 @@ public class UserServiceImpl implements IUserService{
                request.getEmail(),
                request.getPhoneNumber(),
                request.getAddress(),
-               request.getPassword(),
+               PasswordEncryptor.hashPassword(request.getPassword()),
                request.getSecurityQuestion(),
                request.getAnswer()
        );
@@ -141,5 +143,4 @@ public class UserServiceImpl implements IUserService{
                 .map(user -> convertToResponse(user))
                 .toList();
     }
-    
 }

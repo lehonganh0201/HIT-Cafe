@@ -36,14 +36,14 @@ public class UserRepositoryImpl implements IUserRepository{
     @Override
     public User findByEmailAndPassword(String email, String password) {
         return map.values().stream()
-                .filter(us -> us.getEmail().equalsIgnoreCase(email) && us.getPassword().equalsIgnoreCase(password))
+                .filter(us -> us.getEmail().equals(email) && us.getPassword().equals(password))
                 .findFirst().orElse(null);
     }
 
     @Override
     public User findByEmail(String email) {
         return map.values().stream()
-                .filter(user -> user.getEmail().equalsIgnoreCase(email))
+                .filter(user -> user.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
     }

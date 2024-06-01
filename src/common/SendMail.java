@@ -134,10 +134,11 @@ public class SendMail extends javax.swing.JFrame {
         String fromEmailPassword = "bjxv kbxt efgx shyg";
         String subject = "Mã dùng một lần của bạn";
 
-        String emailBody = "<html><body><p>Xin chào <b>"+email+",</b><br><br>"
-                + "<p>Chúng tôi đã nhận yêu cầu mã dùng một lần để dùng cho tài khoản HIT Cafe của bạn.</p><br><br>"
-                + "<p>Mã dùng một lần của bạn là: <b>"+otp+"</b></p><br><br>"
-                + "<p>Nếu không yêu cầu mã này thì bạn có thể bỏ qua email này một cách an toàn. Có thể ai đó khác đã nhập địa chỉ email của bạn do nhầm lẫn.</p>"
+        String emailBody = "<html><body><p>Hello <b>"+email+",</b><br><br>"
+                + "<p>CWe have received a request for a one-time code for your HIT Cafe account.</p><br><br>"
+                + "<p>Your one-time code is: <b>"+otp+"</b></p><br><br>"
+                + "<p>If you did not request this code, you can safely ignore this email. It is possible that someone else entered your email address by mistake.</p><br/>"
+                + "<p>Thank you once again for using our service.</p>"
                 + "</body></html>";
 
 

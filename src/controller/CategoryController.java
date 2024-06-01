@@ -87,9 +87,6 @@ public class CategoryController {
                 categoryService.deleteCategoryById(id);
                 manageCategoryView.reloadTable(categoryService.getAllCategoryRecords());
             }
-        }
-        
-        
+        }   
     }
-    
 }
