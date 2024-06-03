@@ -37,11 +37,12 @@ public class Signup extends javax.swing.JFrame {
         String email = txtEmail.getText();
         String phoneNumber = txtPhoneNumber.getText();
         String address = txtAddress.getText();
-        String password = txtPassword.getText();
+        String password = new String(txtPassword.getPassword());
         String securityQuestion = txtSecurityQuestion.getText();
         String answer = txtAnswer.getText();
+        String otp = txtOtp.getText();
         
-        if(!name.equals("") && email.matches(emailPattern) && phoneNumber.matches(phoneNumberPattern) && phoneNumber.length() == 10 && !address.equals("") && !password.equals("") && !securityQuestion.equals("") && !answer.equals(""))
+        if(!name.equals("") && email.matches(emailPattern) && phoneNumber.matches(phoneNumberPattern) && phoneNumber.length() == 10 && !address.equals("") && !password.equals("") && !securityQuestion.equals("") && !answer.equals("") && !otp.equals(""))
             btnSave.setEnabled(true);
         else
             btnSave.setEnabled(false);
@@ -256,6 +257,11 @@ public class Signup extends javax.swing.JFrame {
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 310, -1, -1));
 
         txtOtp.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtOtp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtOtpKeyReleased(evt);
+            }
+        });
         getContentPane().add(txtOtp, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 300, 360, 30));
 
         btnSend.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -345,6 +351,10 @@ public class Signup extends javax.swing.JFrame {
     private void btnForgotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotActionPerformed
         
     }//GEN-LAST:event_btnForgotActionPerformed
+
+    private void txtOtpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOtpKeyReleased
+        validateFields();
+    }//GEN-LAST:event_txtOtpKeyReleased
 
     public void addExitListener(ActionListener listener){
         btnExit.addActionListener(listener);

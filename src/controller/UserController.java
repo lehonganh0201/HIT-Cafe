@@ -129,11 +129,21 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String confirmCode = generateRandomNumbers(6);
-            otp = confirmCode;
-            SendMail send = new SendMail(mailPassword.getEmail());
-            send.setOtp(confirmCode);
-            send.sendMail(mailPassword.getEmail());
+            try {
+                User user = userService.getUserByEmail(mailPassword.getEmail());
+                if (user != null) {
+                    String confirmCode = generateRandomNumbers(6);
+                    otp = confirmCode;
+                    SendMail send = new SendMail(mailPassword.getEmail());
+                    send.setOtp(confirmCode);
+                    send.sendMail(mailPassword.getEmail());
+                } else {
+                    throw new NotFoundUserException("Your account doen't exist");
+                }
+
+            } catch (NotFoundUserException ex) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

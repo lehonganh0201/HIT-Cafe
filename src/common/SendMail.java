@@ -135,7 +135,7 @@ public class SendMail extends javax.swing.JFrame {
         String subject = "Mã dùng một lần của bạn";
 
         String emailBody = "<html><body><p>Hello <b>"+email+",</b><br><br>"
-                + "<p>CWe have received a request for a one-time code for your HIT Cafe account.</p><br><br>"
+                + "<p>We have received a request for a one-time code for your HIT Cafe account.</p><br><br>"
                 + "<p>Your one-time code is: <b>"+otp+"</b></p><br><br>"
                 + "<p>If you did not request this code, you can safely ignore this email. It is possible that someone else entered your email address by mistake.</p><br/>"
                 + "<p>Thank you once again for using our service.</p>"

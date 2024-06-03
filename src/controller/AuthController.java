@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import model.User;
 import repository.UserRepositoryImpl;
 import request.LoginRequest;
 import request.UserRequest;
@@ -108,11 +109,17 @@ public class AuthController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String confirmCode = generateRandomNumbers(6);
-            otp = confirmCode;
-            SendMail send = new SendMail(signUpView.getEmail());
-            send.setOtp(confirmCode);
-            send.sendMail(signUpView.getEmail());
+            User user = userService.getUserByEmail(signUpView.getEmail());
+            if (user != null) {
+                JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your account already existing</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
+            } else {
+                String confirmCode = generateRandomNumbers(6);
+                otp = confirmCode;
+                SendMail send = new SendMail(signUpView.getEmail());
+                send.setOtp(confirmCode);
+                send.sendMail(signUpView.getEmail());
+            }
+
         }
     }
 
@@ -181,7 +188,7 @@ public class AuthController {
                         System.out.println(ex);
                         JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Your one-time Password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                 }
 
