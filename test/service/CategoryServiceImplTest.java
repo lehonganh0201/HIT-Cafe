@@ -2,12 +2,12 @@ package service;
 
 import java.util.List;
 import model.Category;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import repository.CategoryRepositoryImpl;
 import repository.IRepository.ICategoryRepository;
 import service.IService.ICategoryService;
@@ -19,17 +19,17 @@ public class CategoryServiceImplTest {
     public CategoryServiceImplTest() {
     }
 
-    @BeforeAll
+    @BeforeClass
     public static void setUpClass() {
         System.out.println("BeforeClass - Setup for all tests");
     }
 
-    @AfterAll
+    @AfterClass
     public static void tearDownClass() {
         System.out.println("AfterClass - Cleanup after all tests");
     }
 
-    @BeforeEach
+    @Before
     public void setUp() {
         System.out.println("Before - Setup for each test");
         categoryRepository.clear();
@@ -46,7 +46,7 @@ public class CategoryServiceImplTest {
         instance.saveCategory(new Category(10, "Irish Coffee"));
     }
 
-    @AfterEach
+    @After
     public void tearDown() {
         System.out.println("After - Cleanup after each test");
         categoryRepository.clear();
