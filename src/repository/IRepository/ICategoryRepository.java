@@ -15,4 +15,5 @@ public interface ICategoryRepository {
     public Category save(Category category);
     public List<Category> findAllCategory();
     public void deleteById(Integer id);
+    public void clear();
 }

@@ -19,4 +19,5 @@ public interface IProductRepository {
     public List<Product> findAllByCategory(String category);
     public List<Product> findAllByCategoryAndName(String name,String category);
     public Product findByName(String name);
+    public void clear();
 }

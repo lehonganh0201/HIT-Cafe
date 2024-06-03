@@ -76,5 +76,10 @@ public class ProductRepositoryImpl implements IProductRepository{
         map.clear();
         map = (Map<Integer, Product>) engine.readFile(file);
     }
-    
+
+    @Override
+    public void clear() {
+        map.clear();
+        reloadFile();
+    }
 }

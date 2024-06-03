@@ -5,7 +5,6 @@
 package repository.IRepository;
 
 import java.util.List;
-import java.util.Map;
 import model.Bill;
 
 /**
@@ -17,4 +16,5 @@ public interface IBillRepository {
     public List<Bill> findAll();
     public List<Bill> findByDate(String date);
     public List<Bill> findByDateOrderByIdDesc(String date);
+    public void clear();
 }

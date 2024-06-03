@@ -70,8 +70,6 @@ public class Product implements Serializable{
 
     @Override
     public String toString() {
-        return "Product{" + "id=" + id + ", name=" + name + ", category=" + category + ", price=" + price + '}';
+        return "Product{" + "name=" + name + ", category=" + category + ", price=" + price + '}';
     }
-    
-    
 }

@@ -27,6 +27,9 @@ public class Category implements Serializable{
         this.name = name;
         n++;
     }
+
+    public Category() {
+    }
     
 
     public int getId() {
@@ -47,10 +50,6 @@ public class Category implements Serializable{
 
     @Override
     public String toString() {
-        return "Category{" + "id=" + id + ", name=" + name + '}';
+        return "Category{" + "name=" + name + '}';
     }
-
-    
-    
-    
 }

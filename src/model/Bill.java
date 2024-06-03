@@ -105,6 +105,17 @@ public class Bill implements Serializable{
 
     @Override
     public String toString() {
-        return "Bill{" + "id=" + id + ", name=" + name + ", phoneNumber=" + phoneNumber + ", email=" + email + ", date=" + date + ", total=" + total + ", createBy=" + createBy + '}';
+        return "Bill{" + "name=" + name + ", phoneNumber=" + phoneNumber + ", email=" + email + ", date=" + date + ", total=" + total + ", createBy=" + createBy + '}';
+    }
+    
+     public boolean equalsWithoutId(Bill other) {
+        if (this == other) return true;
+        if (other == null) return false;
+        return name.equals(other.name) &&
+                phoneNumber.equals(other.phoneNumber) &&
+                email.equals(other.email) &&
+                date.equals(other.date) &&
+                total.equals(other.total) &&
+                createBy.equals(other.createBy);
     }
 }

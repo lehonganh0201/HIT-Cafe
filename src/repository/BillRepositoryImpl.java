@@ -27,7 +27,7 @@ public class BillRepositoryImpl implements IBillRepository{
 
     @Override
     public Bill save(Bill bill) {
-        bill.setId(map.size() + 1);
+       bill.setId(map.size() + 1);
        map.put(bill.getId(), bill);
        reloadFile();
        return map.get(bill.getId());
@@ -58,5 +58,11 @@ public class BillRepositoryImpl implements IBillRepository{
     @Override
     public List<Bill> findAll() {
         return map.values().stream().toList();
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+       reloadFile();
     }
 }

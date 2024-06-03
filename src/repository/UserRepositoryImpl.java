@@ -65,4 +65,10 @@ public class UserRepositoryImpl implements IUserRepository{
     public List<User> findAll() {
         return map.values().stream().toList();
     }
+
+    @Override
+    public void clear() {
+        map.clear();
+        reloadFile();
+    }
 }

@@ -48,5 +48,10 @@ public class CategoryRepositoryImpl implements ICategoryRepository{
         map.clear();
         map = (Map<Integer, Category>) engine.readFile(file);
     }
-    
+
+    @Override
+    public void clear() {
+        map.clear();
+        reloadFile();
+    }
 }

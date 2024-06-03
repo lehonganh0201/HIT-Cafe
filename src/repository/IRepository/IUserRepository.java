@@ -17,4 +17,5 @@ public interface IUserRepository {
     public User findByEmail(String email);
     public User update(User user);
     public List<User> findAll();
+    public void clear();
 }
