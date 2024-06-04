@@ -1,5 +1,6 @@
 package service;
 
+import FileConnector.ReloadData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,7 @@ public class BillServiceImplTest {
     @AfterClass
     public static void tearDownClass() {
         System.out.println("AfterClass - Cleanup after all tests");
+        ReloadData.main(null);
     }
 
     @Before

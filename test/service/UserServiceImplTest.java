@@ -1,5 +1,6 @@
 package service;
 
+import FileConnector.ReloadData;
 import exception.ExistUserException;
 import exception.NotFoundUserException;
 import java.util.List;
@@ -34,6 +35,7 @@ public class UserServiceImplTest {
     @AfterClass
     public static void tearDownClass() {
         System.out.println("AfterClass - Cleanup after all tests");
+        ReloadData.main(null);
     }
 
     @Before

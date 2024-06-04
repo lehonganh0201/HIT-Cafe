@@ -1,5 +1,6 @@
 package service;
 
+import FileConnector.ReloadData;
 import java.util.List;
 import model.Product;
 import org.junit.After;
@@ -27,6 +28,7 @@ public class ProductServiceImplTest {
     @AfterClass
     public static void tearDownClass() {
         System.out.println("AfterClass - Cleanup after all tests");
+        ReloadData.main(null);
     }
     
     @Before
