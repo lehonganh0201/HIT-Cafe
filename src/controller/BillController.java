@@ -6,6 +6,7 @@
 package controller;
 
 import common.OpenPdf;
+import contant.AccountContant;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -42,13 +43,13 @@ public class BillController {
         this.billOrdersDetailView.addBillTableMouseListener(new BillTableMouseClick());
     }
 
-    public final List<Bill> filterByEmail(){
-        if(email.equals("admin@gmail.com")){
+    public final List<Bill> filterByEmail() {
+        if (email.equals(AccountContant.admin)) {
             return billService.getAllBillRecords();
         }
         return billService.getAllBillByEmail(email);
     }
-    
+
     void showBillsView() {
         billOrdersDetailView.setVisible(true);
     }
@@ -77,10 +78,18 @@ public class BillController {
         public void keyReleased(KeyEvent e) {
             String date = billOrdersDetailView.getDate();
             boolean status = billOrdersDetailView.getOrderStatus();
-            if (status) {
-                billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
+            if (email.equals(AccountContant.admin)) {
+                if (status) {
+                    billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
+                } else {
+                    billOrdersDetailView.reloadTable(billService.getAllBillRecordsByDESC(date));
+                }
             } else {
-                billOrdersDetailView.reloadTable(billService.getAllBillRecordsByDESC(date));
+                if (status) {
+                    billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderBy(email, date));
+                } else {
+                    billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderByDesc(email, date));
+                }
             }
         }
 
@@ -93,11 +102,20 @@ public class BillController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            String date = billOrdersDetailView.getDate();
             boolean status = billOrdersDetailView.getOrderStatus();
-            if (status) {
-                billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(billOrdersDetailView.getDate()));
+            if (email.equals(AccountContant.admin)) {
+                if (status) {
+                    billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
+                } else {
+                    billOrdersDetailView.reloadTable(billService.getAllBillRecordsByDESC(date));
+                }
             } else {
-                billOrdersDetailView.reloadTable(billService.getAllBillRecordsByDESC(billOrdersDetailView.getDate()));
+                if (status) {
+                    billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderBy(email, date));
+                } else {
+                    billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderByDesc(email, date));
+                }
             }
         }
     }

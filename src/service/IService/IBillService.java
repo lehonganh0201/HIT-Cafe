@@ -20,4 +20,6 @@ public interface IBillService {
     public Double calculateMonthlyRevenue(Integer month, String year);
     public List<Double> getRevenue();
     public List<Bill> getAllBillByEmail(String email);
+    public List<Bill> getAllBillByEmailOrderBy(String email, String date);
+    public List<Bill> getAllBillByEmailOrderByDesc(String email, String date); 
 }

@@ -4,6 +4,7 @@
  */
 package controller;
 
+import contant.AccountContant;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -29,24 +30,22 @@ import view.ViewEditDeleteProduct;
  * @author PC
  */
 public class ProductController {
-
-    private final String email = "admin@gmail.com";
     private final IProductService productService = new ProductServiceImpl(new ProductRepositoryImpl());
     private final ICategoryService categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl());
     private AddNewProduct newProductView;
     private ViewEditDeleteProduct editAndDeleteProductView;
-    private List<Category> categorys = categoryService.getAllCategoryRecords();
+    private List<Category> categories = categoryService.getAllCategoryRecords();
 
     public ProductController(AddNewProduct newProductView) {
         this.newProductView = newProductView;
-        categorys.forEach(cate -> newProductView.getCcb().addItem(cate.getName()));
+        categories.forEach(cate -> newProductView.getCcb().addItem(cate.getName()));
         this.newProductView.addExitListener(new ReturnHomeListener());
         this.newProductView.addSaveProduct(new SaveProductListener());
     }
 
     public ProductController(ViewEditDeleteProduct editAndDeleteProductView) {
         this.editAndDeleteProductView = editAndDeleteProductView;
-        categorys.forEach(cate -> editAndDeleteProductView.getCategory().addItem(cate.getName()));
+        categories.forEach(cate -> editAndDeleteProductView.getCategory().addItem(cate.getName()));
         this.editAndDeleteProductView.reloadTable(productService.getAllRecords());
         this.editAndDeleteProductView.addExitListener(new ReturnHomeListener());
         this.editAndDeleteProductView.addUpdatedListener(new UpdatedProductListener());
@@ -81,7 +80,7 @@ public class ProductController {
                 editAndDeleteProductView.getBtnDelete().setEnabled(true);
                 editAndDeleteProductView.getCategory().removeAllItems();
                 editAndDeleteProductView.getCategory().addItem(category);
-                for (Category category1 : categorys) {
+                for (Category category1 : categories) {
                     if (!category1.getName().equals(category)) {
                         editAndDeleteProductView.getCategory().addItem(category1.getName());
                     }
@@ -144,7 +143,7 @@ public class ProductController {
                 editAndDeleteProductView.setVisible(false);
             }
             Home homeView = new Home();
-            HomeController homeController = new HomeController(email, homeView);
+            HomeController homeController = new HomeController(AccountContant.admin, homeView);
             homeController.showHomeView();
         }
     }

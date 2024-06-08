@@ -6,6 +6,8 @@ package service;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import model.Bill;
 import repository.IRepository.IBillRepository;
@@ -95,6 +97,33 @@ public class BillServiceImpl implements IBillService {
         if(list.isEmpty()){
             return new ArrayList<>();
         }
+        return list;
+    }
+
+    @Override
+    public List<Bill> getAllBillByEmailOrderBy(String email, String date) {
+        List<Bill> emailList = getAllBillByEmail(email);
+        List<Bill> dateList = getAllBillRecordsByDESC(date);
+        List<Bill> list = new ArrayList<>(emailList);
+        list.retainAll(dateList);
+        if(list.isEmpty()){
+            return new ArrayList<>();
+        }
+        Collections.sort(list, Comparator.comparingInt(Bill::getId));
+        return list;
+    }
+
+    @Override
+    public List<Bill> getAllBillByEmailOrderByDesc(String email, String date) {
+        List<Bill> emailList = getAllBillByEmail(email);
+        List<Bill> dateList = getAllBillRecordsByDESC(date);
+        List<Bill> list = new ArrayList<>(emailList);
+        list.retainAll(dateList);
+        
+        if(list.isEmpty()){
+            return new ArrayList<>();
+        }
+        Collections.sort(list, Comparator.comparingInt(Bill::getId).reversed());
         return list;
     }
 }

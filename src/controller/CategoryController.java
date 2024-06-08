@@ -4,6 +4,7 @@
  */
 package controller;
 
+import contant.AccountContant;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -23,7 +24,6 @@ import view.ManageCategory;
  * @author PC
  */
 public class CategoryController {
-    private final String email = "admin@gmail.com";
     private final ICategoryService categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl());
     private ManageCategory manageCategoryView;
 
@@ -65,7 +65,7 @@ public class CategoryController {
                 manageCategoryView.setVisible(false);
             }
             Home view = new Home();
-            HomeController homeController = new HomeController(email, view);
+            HomeController homeController = new HomeController(AccountContant.admin, view);
             homeController.showHomeView();
         }
     }
