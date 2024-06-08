@@ -16,5 +16,6 @@ public interface IBillRepository {
     public List<Bill> findAll();
     public List<Bill> findByDate(String date);
     public List<Bill> findByDateOrderByIdDesc(String date);
+    public List<Bill> findAllByCreateBy(String createBy);
     public void clear();
 }

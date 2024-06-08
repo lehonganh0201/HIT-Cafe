@@ -88,4 +88,13 @@ public class BillServiceImpl implements IBillService {
         }
         return list;
     }
+
+    @Override
+    public List<Bill> getAllBillByEmail(String email) {
+        List<Bill> list = billRepository.findAllByCreateBy(email);
+        if(list.isEmpty()){
+            return new ArrayList<>();
+        }
+        return list;
+    }
 }

@@ -5,7 +5,6 @@
 package service.IService;
 
 import java.util.List;
-import java.util.Map;
 import model.Bill;
 
 /**
@@ -20,4 +19,5 @@ public interface IBillService {
     public Integer getNextBillId();
     public Double calculateMonthlyRevenue(Integer month, String year);
     public List<Double> getRevenue();
+    public List<Bill> getAllBillByEmail(String email);
 }

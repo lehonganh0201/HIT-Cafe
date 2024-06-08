@@ -63,6 +63,13 @@ public class BillRepositoryImpl implements IBillRepository{
     @Override
     public void clear() {
         map.clear();
-       reloadFile();
+        reloadFile();
+    }
+
+    @Override
+    public List<Bill> findAllByCreateBy(String createBy) {
+        return map.values().stream()
+                .filter(bill -> bill.getCreateBy().equals(createBy))
+                .toList();
     }
 }

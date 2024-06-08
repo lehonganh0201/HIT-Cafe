@@ -12,8 +12,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import model.Bill;
 import repository.BillRepositoryImpl;
 import service.BillServiceImpl;
 import service.IService.IBillService;
@@ -33,13 +35,20 @@ public class BillController {
     public BillController(ViewBillsOrderPlaceDetails viewBillsOrderPlaceDetails, String email) {
         this.email = email;
         this.billOrdersDetailView = viewBillsOrderPlaceDetails;
-        this.billOrdersDetailView.reloadTable(billService.getAllBillRecords());
+        this.billOrdersDetailView.reloadTable(filterByEmail());
         this.billOrdersDetailView.addExitListener(new ReturnHomeListener());
         this.billOrdersDetailView.addComboBoxActionListener(new FilterComboBoxListener());
         this.billOrdersDetailView.addDateFilterListener(new DateFilterListener());
         this.billOrdersDetailView.addBillTableMouseListener(new BillTableMouseClick());
     }
 
+    public final List<Bill> filterByEmail(){
+        if(email.equals("admin@gmail.com")){
+            return billService.getAllBillRecords();
+        }
+        return billService.getAllBillByEmail(email);
+    }
+    
     void showBillsView() {
         billOrdersDetailView.setVisible(true);
     }
