@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+import contant.ValidateContant;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import request.UserRequest;
@@ -11,9 +12,6 @@ import request.UserRequest;
  * @author admin
  */
 public class Signup extends javax.swing.JFrame {
-    
-    public String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
-    public String phoneNumberPattern = "^[0-9]*$";
     
     public Signup() {
         initComponents();
@@ -28,6 +26,7 @@ public class Signup extends javax.swing.JFrame {
         txtSecurityQuestion.setText("");
         txtAnswer.setText("");
         txtPassword.setText("");
+        txtOtp.setText("");
         btnSave.setEnabled(false);
     }
     
@@ -42,7 +41,7 @@ public class Signup extends javax.swing.JFrame {
         String answer = txtAnswer.getText();
         String otp = txtOtp.getText();
         
-        if(!name.equals("") && email.matches(emailPattern) && phoneNumber.matches(phoneNumberPattern) && phoneNumber.length() == 10 && !address.equals("") && !password.equals("") && !securityQuestion.equals("") && !answer.equals("") && !otp.equals(""))
+        if(!name.equals("") && email.matches(ValidateContant.EMAIL_PATTERN) && phoneNumber.matches(ValidateContant.PHONE_NUMBER_PATTERN) && phoneNumber.length() == 10 && !address.equals("") && !password.equals("") && !securityQuestion.equals("") && !answer.equals("") && !otp.equals(""))
             btnSave.setEnabled(true);
         else
             btnSave.setEnabled(false);

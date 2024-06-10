@@ -4,6 +4,7 @@
  */
 package view;
 
+import contant.AccountContant;
 import java.awt.event.ActionListener;
 
 /**
@@ -19,7 +20,7 @@ public class Home extends javax.swing.JFrame {
     }
     
     public void showAdminPermisstion(String email){
-        if(!email.equals("admin@gmail.com")) {
+        if(!email.equals(AccountContant.ADMIN)) {
                 btnCategory.setVisible(false);
                 btnNewProduct.setVisible(false);
                 btnViewEditDeleteProduct.setVisible(false);

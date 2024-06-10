@@ -143,7 +143,7 @@ public class ProductController {
                 editAndDeleteProductView.setVisible(false);
             }
             Home homeView = new Home();
-            HomeController homeController = new HomeController(AccountContant.admin, homeView);
+            HomeController homeController = new HomeController(AccountContant.ADMIN, homeView);
             homeController.showHomeView();
         }
     }

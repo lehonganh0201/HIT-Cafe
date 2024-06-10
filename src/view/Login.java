@@ -3,17 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+import contant.ValidateContant;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import javax.swing.ImageIcon;
 import request.LoginRequest;
 /**
  *
  * @author admin
  */
 public class Login extends javax.swing.JFrame implements ActionListener{
-    public String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
     /**
      * Creates new form Login
      */
@@ -31,7 +30,7 @@ public class Login extends javax.swing.JFrame implements ActionListener{
     public void validateFields() {
         String email = txtEmail.getText();
         String password = txtPassword.getText();
-        if(email.matches(emailPattern) && !password.equals("")) {
+        if(email.matches(ValidateContant.EMAIL_PATTERN) && !password.equals("")) {
             btnLogin.setEnabled(true);
         } else {
             btnLogin.setEnabled(false);

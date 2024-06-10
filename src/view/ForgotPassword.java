@@ -4,6 +4,7 @@
  */
 package view;
 
+import contant.ValidateContant;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -16,7 +17,6 @@ public class ForgotPassword extends javax.swing.JFrame {
 
     private String dbAnswer = null;
     private String email = null;
-    private final String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
 
     /**
      * Creates new form ForgotPassword
@@ -40,7 +40,7 @@ public class ForgotPassword extends javax.swing.JFrame {
 
     public void validateEmail() {
         email = txtEmail.getText();
-        if (email.matches(emailPattern)) {
+        if (email.matches(ValidateContant.EMAIL_PATTERN)) {
             btnSearch.setEnabled(true);
         } else {
             btnSearch.setEnabled(false);

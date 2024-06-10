@@ -4,6 +4,7 @@
  */
 package view;
 
+import contant.ValidateContant;
 import java.awt.event.ActionListener;
 
 /**
@@ -12,7 +13,6 @@ import java.awt.event.ActionListener;
  */
 public class MailPassword extends javax.swing.JFrame {
     private String email;
-    private final String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
     
     public MailPassword() {
         initComponents();
@@ -31,7 +31,7 @@ public class MailPassword extends javax.swing.JFrame {
     
     public void validateEmail() {
         email = txtEmail.getText();
-        if(email.matches(emailPattern))
+        if(email.matches(ValidateContant.EMAIL_PATTERN))
             btnSend.setEnabled(true);
         else
             btnSend.setEnabled(false);

@@ -44,7 +44,7 @@ public class BillController {
     }
 
     public final List<Bill> filterByEmail() {
-        if (email.equals(AccountContant.admin)) {
+        if (email.equals(AccountContant.ADMIN)) {
             return billService.getAllBillRecords();
         }
         return billService.getAllBillByEmail(email);
@@ -78,7 +78,7 @@ public class BillController {
         public void keyReleased(KeyEvent e) {
             String date = billOrdersDetailView.getDate();
             boolean status = billOrdersDetailView.getOrderStatus();
-            if (email.equals(AccountContant.admin)) {
+            if (email.equals(AccountContant.ADMIN)) {
                 if (status) {
                     billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
                 } else {
@@ -104,7 +104,7 @@ public class BillController {
         public void actionPerformed(ActionEvent e) {
             String date = billOrdersDetailView.getDate();
             boolean status = billOrdersDetailView.getOrderStatus();
-            if (email.equals(AccountContant.admin)) {
+            if (email.equals(AccountContant.ADMIN)) {
                 if (status) {
                     billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
                 } else {

@@ -65,7 +65,7 @@ public class CategoryController {
                 manageCategoryView.setVisible(false);
             }
             Home view = new Home();
-            HomeController homeController = new HomeController(AccountContant.admin, view);
+            HomeController homeController = new HomeController(AccountContant.ADMIN, view);
             homeController.showHomeView();
         }
     }

@@ -4,6 +4,7 @@
  */
 package view;
 
+import contant.ValidateContant;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
 import javax.swing.table.DefaultTableModel;
@@ -29,8 +30,6 @@ public class PlaceOrder extends javax.swing.JFrame {
     private int grandTotal = 0;
     private int productPrice = 0;
     private int productTotal = 0;
-    private final String emailPattern = "^[a-zA-Z0-9]+[@]+[a-zA-Z0-9]+[.]+[a-zA-Z0-9]+$";
-    private final String phoneNumberPattern = "^[0-9]*$";
 
     public PlaceOrder() {
         initComponents();
@@ -70,7 +69,7 @@ public class PlaceOrder extends javax.swing.JFrame {
         String customerName = txtCusName.getText();
         String customerPhoneNumber = txtCusPhoneNumber.getText();
         String customerEmail = txtCusEmail.getText();
-        if (!customerEmail.equals("") && customerPhoneNumber.matches(phoneNumberPattern) && customerPhoneNumber.length() == 10 && customerEmail.matches(emailPattern) && grandTotal > 0) {
+        if (!customerEmail.equals("") && customerPhoneNumber.matches(ValidateContant.PHONE_NUMBER_PATTERN) && customerPhoneNumber.length() == 10 && customerEmail.matches(ValidateContant.EMAIL_PATTERN) && grandTotal > 0) {
             btnGenerateBillPrint.setEnabled(true);
         } else {
             btnGenerateBillPrint.setEnabled(false);

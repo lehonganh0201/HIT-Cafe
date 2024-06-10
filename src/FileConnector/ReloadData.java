@@ -19,10 +19,10 @@ public class ReloadData implements Serializable {
     static Map<Integer, User> usersMap = new LinkedHashMap<>();
 
     public static void fakeData() {
-        usersMap.put(1, new User(1, "Le Hong Anh", "hle646698@gmail.com", "0909123456", "123 Đường ABC", "$2a$12$ltu1SBawzXTQ4bXk5PC7/.mL7pX2PQdxEGWpi2gicJl.IcxKSnMla", "Tên thú cưng của bạn?", "Miu", "true"));
-        usersMap.put(2, new User(2, "Vu Thi Hong Nhung", "vthn303@gmail.com", "0909876543", "456 Đường DEF", "$2a$12$aHkM.gRvvouPj2Vm1Mrdoecp.2HCA0qLX2Hg4SMBUM.1bPtjX5pDi", "Tên trường tiểu học của bạn?", "Trường XYZ", "true"));
-        usersMap.put(3, new User(3, "Nguyen Huy Hoang", "hoangnh4204gmail.com", "0909876543", "456 Đường DEF", "$2a$12$8ughpexHAojttX5RaC4FQe3QQbwrbOWVj26HKGqMmGq4nJ.VlI.wi", "Tên trường tiểu học của bạn?", "Hehehe", "true"));
-        usersMap.put(4, new User(4, "Khong xac dinh", "test@gmail.com", "0909876543", "456 Đường DEF", "test", "Tên trường tiểu học của bạn?", "Hehehe", "false"));
+        usersMap.put(1, new User(1, "Le Hong Anh", "hle646698@gmail.com", "0909123456", "Hai Duong", "$2a$12$ltu1SBawzXTQ4bXk5PC7/.mL7pX2PQdxEGWpi2gicJl.IcxKSnMla", "Tên thú cưng của bạn?", "Miu", "true"));
+        usersMap.put(2, new User(2, "Vu Thi Hong Nhung", "vthn303@gmail.com", "0909876543", "Nam Dinh", "$2a$12$aHkM.gRvvouPj2Vm1Mrdoecp.2HCA0qLX2Hg4SMBUM.1bPtjX5pDi", "Tên trường tiểu học của bạn?", "Trường XYZ", "true"));
+        usersMap.put(3, new User(3, "Nguyen Huy Hoang", "hoangnh4204gmail.com", "0909876543", "Ha Noi", "$2a$12$8ughpexHAojttX5RaC4FQe3QQbwrbOWVj26HKGqMmGq4nJ.VlI.wi", "Tên trường tiểu học của bạn?", "Hehehe", "true"));
+        usersMap.put(4, new User(4, "Khong xac dinh", "test@gmail.com", "0909876543", "Chua biet", "test", "Tên trường tiểu học của bạn?", "Hehehe", "false"));
         usersMap.put(5, new User(5, "Admin","admin@gmail.com","0123456789","Ha Noi","$2a$12$xmbnSr6Di5FN3zrFqfNz3uw/.6lMhmJ77IKoLOkUdYOSEXT9jZrFa","Tên bạn là gì?","admin","true"));
         
         categoriesMap.put(1, new Category(1, "Cà phê"));
