@@ -39,6 +39,7 @@ public class ProductController {
     public ProductController(AddNewProduct newProductView) {
         this.newProductView = newProductView;
         categories.forEach(cate -> newProductView.getCcb().addItem(cate.getName()));
+        //Lắng nghe sự kiện thêm sản phẩm
         this.newProductView.addExitListener(new ReturnHomeListener());
         this.newProductView.addSaveProduct(new SaveProductListener());
     }
@@ -46,6 +47,7 @@ public class ProductController {
     public ProductController(ViewEditDeleteProduct editAndDeleteProductView) {
         this.editAndDeleteProductView = editAndDeleteProductView;
         categories.forEach(cate -> editAndDeleteProductView.getCategory().addItem(cate.getName()));
+        //Lắng nghe các sự kiện như sửa xóa sản phẩm
         this.editAndDeleteProductView.reloadTable(productService.getAllRecords());
         this.editAndDeleteProductView.addExitListener(new ReturnHomeListener());
         this.editAndDeleteProductView.addUpdatedListener(new UpdatedProductListener());
@@ -94,8 +96,10 @@ public class ProductController {
         @Override
         public void actionPerformed(ActionEvent e) {
             Integer id = editAndDeleteProductView.getId();
+            //Gửi thông báo đến Client có muốn thực hiện xóa sản phẩm không?
             int a = JOptionPane.showConfirmDialog(null, "Do you want to delete this product", "Select", JOptionPane.YES_NO_OPTION);
             if (a == 0) {
+                //Nếu đồng ý thì thực hiện xóa và tải lại bảng
                 productService.deleteById(id);
                 editAndDeleteProductView.reloadTable(productService.getAllRecords());
                 editAndDeleteProductView.clear();
@@ -112,6 +116,7 @@ public class ProductController {
             String category = editAndDeleteProductView.getStringCategory();
             String price = editAndDeleteProductView.getPrice();
             Product product = new Product(id, name, category, price);
+            //Lấy ra các thông tin cần sửa của sản phẩm thực hiện cập nhật và tải lại bảng
             productService.updateProduct(product);
             editAndDeleteProductView.reloadTable(productService.getAllRecords());
         }
@@ -121,6 +126,7 @@ public class ProductController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Lấy ra các thông tin cần thiết của sản phẩm và lưu trữ
             Product product = new Product(
                     newProductView.getName(),
                     newProductView.getSelectedItem(),

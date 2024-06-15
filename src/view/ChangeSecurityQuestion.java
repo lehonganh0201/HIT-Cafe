@@ -178,7 +178,6 @@ public class ChangeSecurityQuestion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
      public void clear() {
-        txtOldSQ.setText("");
         txtNewSQ.setText("");
         txtNewAnswer.setText("");
         txtPassword.setText("");

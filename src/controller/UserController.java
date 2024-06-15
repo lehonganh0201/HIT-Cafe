@@ -49,6 +49,7 @@ public class UserController {
 
     public UserController(ForgotPassword forgotPassword) {
         this.forgotPassword = forgotPassword;
+        //Lắng nghe các sự kiện như tìm kiếm tài khoản, cập nhật tài khoản,...
         this.forgotPassword.addExitListener(new ExitListener());
         this.forgotPassword.addSearchListener(new SearchListener());
         this.forgotPassword.addUpdatedListener(new UpdatedListener());
@@ -58,6 +59,7 @@ public class UserController {
 
     public UserController(MailPassword mailPassword) {
         this.mailPassword = mailPassword;
+        //Lắng nghe các sự kiện như gửi mail, cập nhật mật khẩu cho tài khoản,...
         this.mailPassword.addExitListener(new ExitListener());
         this.mailPassword.addLoginListener(new LoginListener());
         this.mailPassword.addSignUpListener(new SignUpListener());
@@ -68,6 +70,7 @@ public class UserController {
     public UserController(VetifyUsers vetiryUsersView, String email) {
         this.email = email;
         this.vetiryUsersView = vetiryUsersView;
+        //Lắng nghe sự kiện phân quyền cho người dùng,...
         this.vetiryUsersView.reloadTable(userService.getAllUsersExceptAdmin());
         this.vetiryUsersView.addUserTableMouseListener(new UserTableMouseListener());
         this.vetiryUsersView.addEmailKeyListener(new EmailKeyListener());
@@ -77,6 +80,7 @@ public class UserController {
     public UserController(ChangePassword changePasswordView, String email) {
         this.email = email;
         this.changePasswordView = changePasswordView;
+        //Lắng nghe sự kiện cập nhật mật khẩu cho người dùng
         this.changePasswordView.addUpdateListener(new UpdatedPasswordListener());
         this.changePasswordView.addExitListener(new ReturnHomeListener());
     }
@@ -85,6 +89,7 @@ public class UserController {
         this.email = email;
         this.changeSecurityQuestionView = changeSecurityQuestionView;
         User user = userService.getUserByEmail(email);
+        //Lắng nghe sự kiện cập nhật tài khoản người dùng
         this.changeSecurityQuestionView.setOldPasswordText(user.getSecurityQuestion());
         this.changeSecurityQuestionView.addExitListener(new ReturnHomeListener());
         this.changeSecurityQuestionView.addUpdatedSecurityQuest(new UpdatedSecurity());
@@ -130,17 +135,22 @@ public class UserController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                //Kiểm tra xem user đã tồn tại chưa?
                 User user = userService.getUserByEmail(mailPassword.getEmail());
                 if (user != null) {
+                    //Gen ra mã code với 6 kí tự
                     String confirmCode = generateRandomNumbers(6);
                     otp = confirmCode;
+                    //Thực hiện gửi mail
                     SendMail send = new SendMail(mailPassword.getEmail());
                     send.setOtp(confirmCode);
                     send.sendMail(mailPassword.getEmail());
+                    
+                    mailPassword.getTxtEmail().setEnabled(false);
                 } else {
                     throw new NotFoundUserException("Your account doen't exist");
                 }
-
+                //Thông báo đến cho người dùng user không tồn tại
             } catch (NotFoundUserException ex) {
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
             }
@@ -173,6 +183,7 @@ public class UserController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                //Thực hiện cập nhật lại câu hỏi bảo mật của người dùng
                 String password = changeSecurityQuestionView.getPassword();
                 String question = changeSecurityQuestionView.getSecurityQuest();
                 String answer = changeSecurityQuestionView.getNewAnswer();
@@ -192,13 +203,17 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Lấy ra mật khẩu hiện tại của người dùng
             String oldPassword = changePasswordView.getOldPassword();
             try {
+                //Lấy ra user với mail được thực hiện khi đăng nhập
                 User user = userService.getUserByEmail(email);
                 if (user != null) {
+                    //Kiểm tra xem mật khẩu nhập vào có đúng với mật khẩu của người dùng không? và thông báo
                     if (!BCrypt.checkpw(changePasswordView.getOldPassword(), user.getPassword())) {
                         JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Your old password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        //Nếu mật khẩu được nhập vào đúng với mật khẩu lưu trữ thì thực hiện đổi mật khẩu và thông báo đến cho client
                         String newPassword = changePasswordView.getNewPassword();
                         userService.changePassword(email, oldPassword, newPassword);
                         changePasswordView.clear();
@@ -259,11 +274,14 @@ public class UserController {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            //Lấy ra dòng được chọn
             int index = vetiryUsersView.getUserTable().getSelectedRow();
             TableModel model = vetiryUsersView.getUserTable().getModel();
+            //Lấy ra email và trạng thái của tài khoản người dùng
             String email = model.getValueAt(index, 2).toString();
             String status = model.getValueAt(index, 6).toString();
 
+            //Thực hiện chuyển đổi giữ 2 trạng thái
             if (status.equals("true")) {
                 status = "false";
             } else {
@@ -271,6 +289,7 @@ public class UserController {
             }
 
             int a = JOptionPane.showConfirmDialog(null, "Do you want to change status of " + email + "?");
+            //Nếu người dùng chọn đồng ý thì thực hiện cập nhật lại trạng thái cho tài khoản
             if (a == JOptionPane.YES_OPTION) {
                 userService.changeStatus(email, status);
                 vetiryUsersView.reloadTable(userService.getAllUsersExceptAdmin());
@@ -325,10 +344,13 @@ public class UserController {
         public void actionPerformed(ActionEvent e) {
             String answer = forgotPassword.getAnswer();
             String newPassword = forgotPassword.getNewPassword();
+            //Kiểm tra xem đáp án nhập vào có trùng với đáp án có trong database không?
             if (answer.equals(accountAnswer)) {
+                //Nếu thành công thì thực hiện cập nhật mật khẩu mới cho người dùng và thông báo
                 userService.update(forgotPassword.getEmail(), newPassword);
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:green\">Change password successfully!</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
+                //Nếu không thành công thì gửi thông báo đến cho người dùng
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Incorrect Answer</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -341,10 +363,13 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Tìm kiếm người dùng với email được nhập vào
             User theUser = userService.getUserByEmail(forgotPassword.getEmail());
             if (theUser == null) {
+                //Thông báo nếu email không tồn tại
                 JOptionPane.showMessageDialog(null, "<html><b style=\"color:red\">Incorrect Email</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
             } else {
+                //Nếu tìm thấy thì hiện câu hỏi cho người dùng trả lời?
                 forgotPassword.getBtnSearch().setEnabled(false);
                 forgotPassword.getTxtEmail().setEnabled(false);
                 accountAnswer = theUser.getAnswer();

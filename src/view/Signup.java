@@ -6,6 +6,7 @@ package view;
 import contant.ValidateContant;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import javax.swing.JTextField;
 import request.UserRequest;
 /**
  *
@@ -28,6 +29,7 @@ public class Signup extends javax.swing.JFrame {
         txtPassword.setText("");
         txtOtp.setText("");
         btnSave.setEnabled(false);
+        txtEmail.setEnabled(true);
     }
     
     
@@ -398,6 +400,8 @@ public class Signup extends javax.swing.JFrame {
         return txtOtp.getText();
     }
     
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnExit;
@@ -424,4 +428,10 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JTextField txtPhoneNumber;
     private javax.swing.JTextField txtSecurityQuestion;
     // End of variables declaration//GEN-END:variables
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
+    }
+
+    
 }

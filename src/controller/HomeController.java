@@ -27,7 +27,6 @@ import view.ViewEditDeleteProduct;
  * @author PC
  */
 public class HomeController {
-    private final IBillService billService = new BillServiceImpl(new BillRepositoryImpl());
     private String email = "";
     private final Home homeView;
 
@@ -35,6 +34,7 @@ public class HomeController {
         this.email = email;
         this.homeView = view;
         homeView.showAdminPermisstion(email);
+        //Lắng nghe các sự kiện Click chuyển đổi màn hình
         homeView.addViewProductListener(new ViewProductListener());
         homeView.addCategoryListener(new CategoryListener());
         homeView.addVerifyUserListener(new VerifyUserListener());

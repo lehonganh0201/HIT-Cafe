@@ -36,6 +36,7 @@ public class ForgotPassword extends javax.swing.JFrame {
         txtSeQue.setText("");
         txtAnswer.setText("");
         txtNewPassword.setText("");
+        txtEmail.setEnabled(true);
     }
 
     public void validateEmail() {

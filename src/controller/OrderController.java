@@ -53,6 +53,7 @@ public class OrderController {
     public OrderController(RevenueView revenueView, String email) {
         this.revenueView = revenueView;
         this.email = email;
+        //Cập nhật lại các giá trị cho biểu đồ
         this.revenueView.addExitListener(new ReturnHomeListener());
         this.revenueView.setRevenue(billService.getRevenue());
     }
@@ -64,6 +65,7 @@ public class OrderController {
         List<Category> allCategories = categoryService.getAllCategoryRecords();
         List<Product> allProducts = productService.getAllRecords();
         this.orderView.initShow(nextBillId, allCategories, allProducts);
+        //Lắng nghe các sự kiện Click con trỏ chuột và sinh ra hóa đơn ra dạng pdf
         this.orderView.addExitListener(new ReturnHomeListener());
         this.orderView.addKeyReleasedListener(new SearchListener());
         this.orderView.addMouseClickedListener(new ClickerTableListener());
@@ -135,6 +137,7 @@ public class OrderController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Lấy ra các thông tin cần thiết để sinh ra hóa đơn
             String customerName = orderView.getTxtCusName().getText();
             String customerPhoneNumber = orderView.getTxtCusPhoneNumber().getText();
             String customerEmail = orderView.getTxtCusEmail().getText();
@@ -142,6 +145,7 @@ public class OrderController {
             Date date = new Date();
             String todaydate = dFormat.format(date);
             String total = String.valueOf(orderView.getGrandTotal());
+            //Thực hiện lưu trữ lại hóa đơn
             Bill bill = new Bill();
             bill.setId(billService.getNextBillId());
             bill.setName(customerName);
@@ -152,6 +156,7 @@ public class OrderController {
             bill.setCreateBy(email);
             billService.saveBill(bill);
 
+            //Tạo ra file pdf và clear
             createPdf(customerName, orderView.getBillId(), total);
             orderView.clearProductFields();
         }
@@ -205,8 +210,10 @@ public class OrderController {
 
         @Override
         public void keyReleased(KeyEvent e) {
+            //Lấy ra sản phẩm với tên nhập vào và category
             String name = orderView.getNameText();
             String category = orderView.getCBBSelectedItem();
+            //Nếu tên khác rỗng thì lấy tất cả 
             if (name.trim().isEmpty()) {
                 orderView.fillterProductByName(productService.getAllRecords());
             } else {

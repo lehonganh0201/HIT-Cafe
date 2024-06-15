@@ -47,6 +47,8 @@ public class AuthController {
 
     private void initLoginListeners() {
         if (loginView != null) {
+            //Lắng nghe các sự kiện khi thực hiện
+            //đăng nhập, chuyển sang màn hình đăng ký, quên mật khẩu hoặc thoát chương trình
             this.loginView.addLoginListener(new LoginListener());
             this.loginView.addSignUpListener(new SignUpListener());
             this.loginView.addForgotPasswordListener(new ForgotPasswordListener());
@@ -56,6 +58,8 @@ public class AuthController {
 
     private void initSignUpListeners() {
         if (signUpView != null) {
+            //Lắng nghe các sự kiện như thoát chương trình, chuyển màn hình sang login hoặc quên mật khẩu,
+            //gửi mã otp và lưu tài khoản
             this.signUpView.addExitListener(new ExitListener());
             this.signUpView.addSaveListener(new SaveListener());
             this.signUpView.addLoginListener(new ShowLoginListener());
@@ -118,6 +122,8 @@ public class AuthController {
                 SendMail send = new SendMail(signUpView.getEmail());
                 send.setOtp(confirmCode);
                 send.sendMail(signUpView.getEmail());
+                
+                signUpView.getTxtEmail().setEnabled(false);
             }
 
         }
@@ -176,19 +182,25 @@ public class AuthController {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (signUpView != null) {
+                // Lấy mã Otp được người dùng nhập vào và so sánh với mã được gen ra
                 if (signUpView.getOtp().equals(otp)) {
                     try {
+                        //Lấy request từ phía client
                         UserRequest request = signUpView.getUserRequest();
+                        //Thực hiện lưu trữ dữ liệu
                         userService.save(request);
                         signUpView.clear();
+                        //Thông báo thành công
                         JOptionPane.showMessageDialog(null, "<html><b style=\"color: green\">Registration successfully!</b></html>", "Message", JOptionPane.DEFAULT_OPTION);
                     } catch (ExistUserException ex) {
+                        //Bắt lỗi người dùng với email đã tồn tại
                         JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">" + ex.getMessage() + "</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                     } catch (Exception ex) {
-                        System.out.println(ex);
+                        //Bắt lỗi chưa xác định
                         JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
+                    //Gửi thông báo đến Client xem mã otp được nhập vào có đúng không?
                     JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Your one-time Password not correct</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -243,24 +255,31 @@ public class AuthController {
         public void actionPerformed(ActionEvent e) {
             if (loginView != null) {
                 try {
+                    //Lấy request được nhập từ màn hình
                     LoginRequest request = loginView.getLoginRequest();
+                    //Thực hiện đăng nhập cho người dùng
                     UserResponse user = userService.login(request);
 
                     if (user != null) {
+                        //Kiểm tra xem user có được phân quyền truy cập không?
                         if (user.getStatus().equals("false")) {
                             ImageIcon icon = new ImageIcon("src/popupicon/wait.png");
+                            //Thông báo đến cho người dùng nếu đăng nhập không thành công
                             JOptionPane.showMessageDialog(null, "<html><b>Wait for Admin Approval</b></html>", "Message", JOptionPane.INFORMATION_MESSAGE, icon);
                             loginView.clear();
                         } else if (user.getStatus().equals("true")) {
+                            //Chuyển đổi người dùng đăng nhập thành công sang màn hình home
                             loginView.setVisible(false);
                             Home homeView = new Home();
                             HomeController homeController = new HomeController(user.getEmail(), homeView);
                             homeController.showHomeView();
                         }
                     }
+                    //Bắt lỗi nếu không tìm được người dùng với request nhận vào
                 } catch (NotFoundUserException ex) {
                     JOptionPane.showMessageDialog(null, "<html><b style=\"color: red\">Incorrect Username or Password</b></html>", "Message", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
+                    //Bắt các lỗi chưa xác định
                     JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

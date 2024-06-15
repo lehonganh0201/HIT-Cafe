@@ -6,6 +6,7 @@ package view;
 
 import contant.ValidateContant;
 import java.awt.event.ActionListener;
+import javax.swing.JTextField;
 
 /**
  *
@@ -23,7 +24,7 @@ public class MailPassword extends javax.swing.JFrame {
     public void clear() {
         btnUpdate.setEnabled(false);
         btnSend.setEnabled(false);
-        txtEmail.setEditable(true);
+        txtEmail.setEnabled(true);
         txtEmail.setText("");
         txtOtp.setText("");
         txtPass.setText("");
@@ -193,6 +194,10 @@ public class MailPassword extends javax.swing.JFrame {
     
     public String getOtp(){
         return txtOtp.getText();
+    }
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
     }
     
     public String getNewPassword(){

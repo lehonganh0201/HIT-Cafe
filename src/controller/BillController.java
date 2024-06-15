@@ -102,16 +102,23 @@ public class BillController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //Lấy ra ngày được nhập vào
             String date = billOrdersDetailView.getDate();
+            //Lấy ra trạng thái muốn sắp xếp
             boolean status = billOrdersDetailView.getOrderStatus();
+            //Nếu tài khoản thực hiện là admin
             if (email.equals(AccountContant.ADMIN)) {
                 if (status) {
+                    //Nếu trạng thái là true thì thực hiện sắp xếp tăng dần
                     billOrdersDetailView.reloadTable(billService.getAllBillRecordsByINC(date));
                 } else {
+                    //Ngược lại thì giảm dần
                     billOrdersDetailView.reloadTable(billService.getAllBillRecordsByDESC(date));
                 }
+                //Nếu tài khonar thực hiện không phải là user
             } else {
                 if (status) {
+                    //Chỉ lấy ra các bill do người dùng đó order
                     billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderBy(email, date));
                 } else {
                     billOrdersDetailView.reloadTable(billService.getAllBillByEmailOrderByDesc(email, date));

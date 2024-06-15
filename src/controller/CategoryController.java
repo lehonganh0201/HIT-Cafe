@@ -29,6 +29,7 @@ public class CategoryController {
 
     public CategoryController(ManageCategory manageCategoryView) {
         this.manageCategoryView = manageCategoryView;
+        //Thực hiện lắng nghe sự kiện lưu trữ và xóa danh mục
         this.manageCategoryView.reloadTable(categoryService.getAllCategoryRecords());
         this.manageCategoryView.addCategoryTableMouseListener(new CategoryTableMouseListener());
         this.manageCategoryView.addExitListener(new ReturnLoginListener());
@@ -78,11 +79,14 @@ public class CategoryController {
         @Override
         public void mouseClicked(MouseEvent e) {
             JTable categoryTable = manageCategoryView.getCategoryTable();
+            //Lấy ra dòng được chọn
             int index = categoryTable.getSelectedRow();
             TableModel model = categoryTable.getModel();
             Integer id = (Integer) model.getValueAt(index, 0);
             String name = model.getValueAt(index, 1).toString();
+            //Gửi thông báo đến Client xác nhận muốn xóa không?
             int a = JOptionPane.showConfirmDialog(null, "Do you want to Delete " + name + " Category", "Select", JOptionPane.YES_NO_OPTION);
+            //Nếu đồng ý thì thực hiện xóa category khỏi bảng và cập nhật lại danh sách
             if (a == 0) {
                 categoryService.deleteCategoryById(id);
                 manageCategoryView.reloadTable(categoryService.getAllCategoryRecords());

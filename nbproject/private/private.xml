@@ -4,6 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/CafeManagementSystem.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/FileConnector/FileEngine.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/view/AddNewProduct.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/controller/ProductController.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/FileConnector/ReloadData.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/repository/ProductRepositoryImpl.java</file>
+            <file>file:/E:/workspace/Cafe%20Management%20System/Cafe%20Management%20System/src/service/ProductServiceImpl.java</file>
         </group>
     </open-files>
 </project-private>
